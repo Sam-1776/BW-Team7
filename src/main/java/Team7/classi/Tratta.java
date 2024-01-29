@@ -21,6 +21,9 @@ public class Tratta {
     @OneToMany(mappedBy = "tratta")
     private  List<Mezzo> listaMezzi;
 
+    @OneToMany(mappedBy = "tratta")
+    private List<Tappa> tappa;
+
     public Tratta() {
     }
 
@@ -28,7 +31,6 @@ public class Tratta {
         this.zonaPartenza = zonaPartenza;
         this.capolinea = capolinea;
         this.tempoMedio = tempoMedio;
-        this.listaMezzi = listaMezzi;
     }
 
     public String getZonaPartenza() {

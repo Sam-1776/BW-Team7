@@ -11,7 +11,7 @@ public class TrattaDAO {
         this.em = em;
     }
 
-    public void saveTransport(Tratta tratta){
+    public void saveSection(Tratta tratta){
         EntityTransaction transaction = em.getTransaction();
 
         try {

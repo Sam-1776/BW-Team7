@@ -7,22 +7,21 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-@DiscriminatorValue("abbonamento")
-public class Abbonamento extends Emissione_Biglietti {
+@DiscriminatorValue("biglietto")
+public class Biglietto extends Emissione_Biglietti {
 
     @ManyToOne
     @JoinColumn(name = "emissione_id", nullable = false)
     private Emissione_Biglietti emissione;
 
-    @Enumerated(EnumType.STRING)
-    private Periodicita periodicita;
+    private LocalDate dataAcquisto;
 
-    @OneToOne
-    private Tessera tessera;
+    private LocalDate dataTimbro;
 }

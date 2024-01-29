@@ -7,6 +7,7 @@ import Team7.classi.Tratta;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -25,7 +26,8 @@ public abstract class Mezzo {
     private Tratta tratta;
 
 
-
+    @OneToMany(mappedBy = "mezzo")
+    private List<Biglietto> listaBiglietto;
 
     private LocalDateTime partenza;
 

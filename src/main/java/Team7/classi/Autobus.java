@@ -10,11 +10,11 @@ import java.time.LocalDateTime;
 @Entity
 @DiscriminatorValue("autobus")
 public class Autobus extends Mezzo {
-    private int capienze;
+    private int capienzaBus;
 
-    public Autobus(LocalDate periodo, Servizio servizio, Tratta tratta, LocalDateTime partenza, LocalDateTime arrivo, int capienze) {
+    public Autobus(LocalDate periodo, Servizio servizio, Tratta tratta, LocalDateTime partenza, LocalDateTime arrivo, int capienzaBus) {
         super(periodo, servizio, tratta, partenza, arrivo);
-        this.capienze = capienze;
+        this.capienzaBus = capienzaBus;
     }
 
     public Autobus(){
@@ -22,10 +22,10 @@ public class Autobus extends Mezzo {
     }
 
     public int getCapienze() {
-        return capienze;
+        return capienzaBus;
     }
 
     public void setCapienze(int capienze) {
-        this.capienze = capienze;
+        this.capienzaBus = capienze;
     }
 }

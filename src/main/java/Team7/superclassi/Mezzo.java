@@ -7,7 +7,6 @@ import Team7.classi.Tratta;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -26,8 +25,7 @@ public abstract class Mezzo {
     private Tratta tratta;
 
 
-    @OneToMany
-    private List<Biglietto> bigliettiTratta;
+
 
     private LocalDateTime partenza;
 
@@ -94,7 +92,7 @@ public abstract class Mezzo {
                 "periodo=" + periodo +
                 ", servizio=" + servizio +
                 ", tratta=" + tratta +
-                ", bigliettiTratta=" + bigliettiTratta +
+                ", bigliettiTratta=" +
                 ", partenza=" + partenza +
                 ", arrivo=" + arrivo +
                 '}';

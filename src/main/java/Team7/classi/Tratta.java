@@ -24,7 +24,7 @@ public class Tratta {
     public Tratta() {
     }
 
-    public Tratta(String zonaPartenza, String capolinea, double tempoMedio, List<Mezzo> listaMezzi) {
+    public Tratta(String zonaPartenza, String capolinea, double tempoMedio) {
         this.zonaPartenza = zonaPartenza;
         this.capolinea = capolinea;
         this.tempoMedio = tempoMedio;

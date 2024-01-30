@@ -16,17 +16,20 @@ public class Biglietto {
     @JoinColumn(name = "mezzo_id")
     private Mezzo mezzo;
 
-
-
     private LocalDate data;
 
     private LocalDateTime timbro;
 
+    @ManyToOne
+    @JoinColumn(name = "emissione_id")
+    private Emissione_Biglietti emissioneBiglietti;
+
     public Biglietto() {
     }
 
-    public Biglietto(LocalDate data) {
+    public Biglietto(LocalDate data, Emissione_Biglietti emissioneBiglietti) {
         this.data = data;
+        this.emissioneBiglietti = emissioneBiglietti;
     }
 
     public LocalDate getData() {

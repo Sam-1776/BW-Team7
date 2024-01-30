@@ -3,6 +3,7 @@ package Team7;
 import Team7.classi.*;
 import Team7.dao.*;
 import Team7.superclassi.Biglietto;
+import Team7.superclassi.Emissione_Biglietti;
 import Team7.superclassi.Mezzo;
 import com.github.javafaker.Faker;
 
@@ -33,17 +34,32 @@ public class Application {
         TesseraDAO td = new TesseraDAO(em);
         MezzoDAO mezzoDAO = new MezzoDAO(em);
         TrattaDAO trattaDao = new TrattaDAO(em);
+        EmissioneDAO emissioneDAO = new EmissioneDAO(em);
         BigliettoDAO bigliettoDAO = new BigliettoDAO(em);
 
 
         Tratta tratta1 = new Tratta("Piazza Cavour","Manzoni",1.32);
         Mezzo autobus1 = new Autobus(generateData(), Servizio.SERVIZIO,tratta1, LocalDateTime.now(),LocalDateTime.now(),100);
-        Biglietto biglietto1 = new Biglietto(LocalDate.now());
+
+        Emissione_Biglietti d1 = new Distributore(Stato.ATTIVO);
+        Emissione_Biglietti r1 = new Rivenditore(faker.company().name(), faker.address().country());
+
+        emissioneDAO.saveDb(d1);
+
+        Biglietto biglietto1 = new Biglietto(LocalDate.now(), d1);
+        Tessera t = td.getById(101);
+        Biglietto a1 = new Abbonamento(LocalDate.now(), d1, Periodicita.SETTIMANALE, t);
+
+        bigliettoDAO.saveBiglietto(biglietto1);
+        bigliettoDAO.saveBiglietto(a1);
+
+
+
 
        // trattaDao.saveSection(tratta1);
        // mezzoDAO.saveTransport(autobus1);
 
-        bigliettoDAO.saveBiglietto(biglietto1);
+//        bigliettoDAO.saveBiglietto(biglietto1);
 
 
 //        generateUserDb(ud);

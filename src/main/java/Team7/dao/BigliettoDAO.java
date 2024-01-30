@@ -23,4 +23,14 @@ public class BigliettoDAO {
             System.out.println(e.getMessage());
         }
     }
+
+    public Biglietto getById (long id){
+        Biglietto found = em.find(Biglietto.class, id);
+        if (found != null) {
+            return found;
+        }else {
+            System.out.println("Biglietto non trovato");
+            return null;
+        }
+    }
 }

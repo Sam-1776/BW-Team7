@@ -1,8 +1,6 @@
 package Team7.superclassi;
 
 import Team7.classi.Abbonamento;
-import Team7.classi.Biglietto;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,7 +10,6 @@ import java.util.List;
 
 @Entity
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -24,10 +21,11 @@ public abstract class Emissione_Biglietti {
     @GeneratedValue
     private Long id;
 
-    @OneToMany(mappedBy = "emissione")
+    @OneToMany(mappedBy = "emissioneBiglietti")
     private List<Biglietto> bigliettiEmessi;
 
-    @OneToMany(mappedBy = "emissione")
+    @OneToMany(mappedBy = "emissioneBiglietti")
     private List<Abbonamento> abbonamentiEmessi;
+
 
 }

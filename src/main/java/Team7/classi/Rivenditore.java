@@ -1,4 +1,23 @@
 package Team7.classi;
 
-public class Rivenditore {
+import Team7.superclassi.Emissione_Biglietti;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import javax.persistence.Entity;
+
+@Entity
+@NoArgsConstructor
+@Getter
+@Setter
+public class Rivenditore extends Emissione_Biglietti {
+
+    private String nome;
+    private String Luogo;
+
+    public Rivenditore(String nome, String luogo) {
+        this.nome = nome;
+        Luogo = luogo;
+    }
 }

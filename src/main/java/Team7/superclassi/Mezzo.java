@@ -49,6 +49,10 @@ public abstract class Mezzo {
         this.listaBiglietto = listaBiglietto;
     }
 
+    public long getId() {
+        return id;
+    }
+
     public LocalDate getPeriodo() {
         return periodo;
     }
@@ -90,6 +94,8 @@ public abstract class Mezzo {
     public void setArrivo(LocalDateTime arrivo) {
         this.arrivo = arrivo;
     }
+
+
 
     @Override
     public String toString() {

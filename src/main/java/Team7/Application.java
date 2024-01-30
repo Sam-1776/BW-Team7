@@ -23,8 +23,8 @@ public class Application {
     private static Faker faker = new Faker(Locale.ITALY);
     private static Random rdm = new Random();
 
-    static Supplier<Utente> generatoreUser = () ->{
-        return new Utente(faker.name().firstName(), faker.name().lastName(), rdm.nextInt(1950,2010));
+    static Supplier<Utente> generatoreUser = () -> {
+        return new Utente(faker.name().firstName(), faker.name().lastName(), rdm.nextInt(1950, 2010));
     };
 
     public static void main(String[] args) {
@@ -39,9 +39,9 @@ public class Application {
         TappaDAO tappaDAO = new TappaDAO(em);
 
 
-        Tratta tratta1 = new Tratta("Piazza Cavour","Manzoni",1.32);
-        Tappa tappa1 = new Tappa("Piazza Euclide",tratta1);
-        Mezzo autobus1 = new Autobus(generateData(), Servizio.SERVIZIO,tratta1, LocalDateTime.now(),LocalDateTime.now(),100);
+        Tratta tratta1 = new Tratta("Piazza Cavour", "Manzoni", 1.32);
+        Tappa tappa1 = new Tappa("Piazza Euclide", tratta1);
+        Mezzo autobus1 = new Autobus(generateData(), Servizio.SERVIZIO, tratta1, LocalDateTime.now(), LocalDateTime.now(), 100);
         Emissione_Biglietti d1 = new Distributore(Stato.ATTIVO);
         Emissione_Biglietti r1 = new Rivenditore(faker.company().name(), faker.address().country());
 
@@ -50,54 +50,66 @@ public class Application {
         Biglietto biglietto1 = new Biglietto(LocalDate.now(), d1);
         Tessera t = td.getById(101);
         Biglietto a1 = new Abbonamento(LocalDate.now(), d1, Periodicita.SETTIMANALE, t);
-
+        Biglietto provaBi= new Biglietto(LocalDate.now(),d1);
+        bigliettoDAO.saveBiglietto(provaBi);
         bigliettoDAO.saveBiglietto(biglietto1);
         bigliettoDAO.saveBiglietto(a1);
 
 
-
         tappaDAO.saveTappa(tappa1);
-       // trattaDao.saveSection(tratta1);
-       // mezzoDAO.saveTransport(autobus1);
-
-//        bigliettoDAO.saveBiglietto(biglietto1);
+         trattaDao.saveSection(tratta1);
+         mezzoDAO.saveTransport(autobus1);
 
 
-//        generateUserDb(ud);
-//        generateUserCard(td, ud);
+        bigliettoDAO.timbraBiglietto(biglietto1,autobus1);
+
+        bigliettoDAO.timbraBiglietto(provaBi,autobus1);
+
+
+        bigliettoDAO.timbraBiglietto(biglietto1,autobus1);
+
+
+        System.out.println("Numeri biglietti timbrati sulla tratta "+ autobus1.getTratta() + "sono: " + bigliettoDAO.getBigliettiMezzo(autobus1).size());
+        System.out.println("Numeri biglietti timbrati il giorno sono: " +bigliettoDAO.getBigliettiTimbratiInGiorno(LocalDate.now()).size());
+
+
+
+
+
+
 
 
     }
 
-    public static void generateUserDb(UtenteDAO x){
+    public static void generateUserDb(UtenteDAO x) {
         for (int i = 0; i < 100; i++) {
             x.saveDb(generatoreUser.get());
         }
     }
 
-    public static void generateUserCard(TesseraDAO x, UtenteDAO y){
+    public static void generateUserCard(TesseraDAO x, UtenteDAO y) {
         for (int i = 0; i < 20; i++) {
-            long n = rdm.nextLong(1,100);
+            long n = rdm.nextLong(1, 100);
             Utente u = y.getById(n);
-            if (u != null){
-                if ( y.getElement(n) != null){
+            if (u != null) {
+                if (y.getElement(n) != null) {
                     System.out.println("Hai già una tessera");
                     i--;
-                }else {
+                } else {
                     Tessera t = new Tessera(generateData(), u);
                     x.saveDb(t);
                     u.setNumero_tessera(t);
                     y.saveDb(u);
                 }
-            }else {
+            } else {
                 i--;
             }
         }
     }
 
-    public static LocalDate generateData (){
+    public static LocalDate generateData() {
 
-        int year = rdm.nextInt(2022,2023);
+        int year = rdm.nextInt(2022, 2023);
         int month = rdm.nextInt(12) + 1;
         int maxDay = LocalDate.of(year, month, 1).lengthOfMonth();
         int day = rdm.nextInt(maxDay) + 1;
@@ -107,5 +119,7 @@ public class Application {
         return randomDate;
     }
 
-    
+
+
+
 }

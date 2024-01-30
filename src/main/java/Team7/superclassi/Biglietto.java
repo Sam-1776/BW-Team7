@@ -47,4 +47,18 @@ public class Biglietto {
     public void setTimbro(LocalDateTime timbro) {
         this.timbro = timbro;
     }
+
+    public void setMezzo(Mezzo mezzo) {
+        this.mezzo = mezzo;
+    }
+
+    @Override
+    public String toString() {
+        return "Biglietto{" +
+                "mezzo=" + mezzo +
+                ", data=" + data +
+                ", timbro=" + timbro +
+                ", emissioneBiglietti=" + emissioneBiglietti +
+                '}';
+    }
 }

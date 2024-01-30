@@ -1,5 +1,6 @@
 package Team7.classi;
 
+import Team7.superclassi.Biglietto;
 import Team7.superclassi.Emissione_Biglietti;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,7 +15,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @DiscriminatorValue("abbonamento")
-public class Abbonamento extends Emissione_Biglietti {
+public class Abbonamento extends Biglietto {
 
     @ManyToOne
     @JoinColumn(name = "emissione_id", nullable = false)

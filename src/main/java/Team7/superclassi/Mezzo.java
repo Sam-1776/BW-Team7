@@ -3,6 +3,8 @@ package Team7.superclassi;
 
 import Team7.classi.Servizio;
 import Team7.classi.Tratta;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -10,6 +12,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
+@Getter
+@Setter
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "mezzi")
 public abstract class Mezzo {
@@ -45,55 +49,7 @@ public abstract class Mezzo {
         this.arrivo = arrivo;
     }
 
-    public void setListaBiglietto(List<Biglietto> listaBiglietto) {
-        this.listaBiglietto = listaBiglietto;
-    }
 
-    public long getId() {
-        return id;
-    }
-
-    public LocalDate getPeriodo() {
-        return periodo;
-    }
-
-    public void setPeriodo(LocalDate periodo) {
-        this.periodo = periodo;
-    }
-
-    public Servizio getServizio() {
-        return servizio;
-    }
-
-    public void setServizio(Servizio servizio) {
-        this.servizio = servizio;
-    }
-
-    public Tratta getTratta() {
-        return tratta;
-    }
-
-    public void setTratta(Tratta tratta) {
-        this.tratta = tratta;
-    }
-
-
-
-    public LocalDateTime getPartenza() {
-        return partenza;
-    }
-
-    public void setPartenza(LocalDateTime partenza) {
-        this.partenza = partenza;
-    }
-
-    public LocalDateTime getArrivo() {
-        return arrivo;
-    }
-
-    public void setArrivo(LocalDateTime arrivo) {
-        this.arrivo = arrivo;
-    }
 
 
 
@@ -108,4 +64,6 @@ public abstract class Mezzo {
                 ", arrivo=" + arrivo +
                 '}';
     }
+
+
 }

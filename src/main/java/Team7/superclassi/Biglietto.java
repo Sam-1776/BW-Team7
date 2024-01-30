@@ -16,8 +16,6 @@ public class Biglietto {
     @JoinColumn(name = "mezzo_id")
     private Mezzo mezzo;
 
-
-
     private LocalDate data;
 
     private LocalDateTime timbro;

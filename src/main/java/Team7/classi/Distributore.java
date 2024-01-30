@@ -20,4 +20,12 @@ public class Distributore extends Emissione_Biglietti {
     public Distributore( Stato stato) {
         this.stato = stato;
     }
+
+    public Stato getStato() {
+        return stato;
+    }
+
+    public void setStato(Stato stato) {
+        this.stato = stato;
+    }
 }

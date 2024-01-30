@@ -4,6 +4,8 @@ import Team7.superclassi.Biglietto;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.persistence.TypedQuery;
+import java.util.List;
 
 public class BigliettoDAO {
         private EntityManager em;
@@ -32,5 +34,14 @@ public class BigliettoDAO {
             System.out.println("Biglietto non trovato");
             return null;
         }
+    }
+
+    public List<Biglietto> getItAndCheckExistence(long id){
+        TypedQuery<Biglietto> getIt = em.createQuery("SELECT b FROM Biglietto b WHERE b.tessera.id =:id", Biglietto.class);
+        getIt.setParameter("id", id);
+        if (getIt != null){
+            return getIt.getResultList();
+        }
+        return null;
     }
 }

@@ -1,7 +1,6 @@
 package Team7.superclassi;
 
 import Team7.classi.Abbonamento;
-import Team7.classi.Biglietto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

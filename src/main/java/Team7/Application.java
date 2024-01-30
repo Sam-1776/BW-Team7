@@ -34,11 +34,14 @@ public class Application {
         MezzoDAO mezzoDAO = new MezzoDAO(em);
         TrattaDAO trattaDao = new TrattaDAO(em);
         BigliettoDAO bigliettoDAO = new BigliettoDAO(em);
+        TappaDAO tappaDAO = new TappaDAO(em);
 
 
         Tratta tratta1 = new Tratta("Piazza Cavour","Manzoni",1.32);
+        Tappa tappa1 = new Tappa("Piazza Euclide",tratta1);
         Mezzo autobus1 = new Autobus(generateData(), Servizio.SERVIZIO,tratta1, LocalDateTime.now(),LocalDateTime.now(),100);
         Biglietto biglietto1 = new Biglietto(LocalDate.now());
+        tappaDAO.saveTappa(tappa1);
 
        // trattaDao.saveSection(tratta1);
        // mezzoDAO.saveTransport(autobus1);

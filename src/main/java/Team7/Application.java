@@ -36,11 +36,12 @@ public class Application {
         TrattaDAO trattaDao = new TrattaDAO(em);
         EmissioneDAO emissioneDAO = new EmissioneDAO(em);
         BigliettoDAO bigliettoDAO = new BigliettoDAO(em);
+        TappaDAO tappaDAO = new TappaDAO(em);
 
 
         Tratta tratta1 = new Tratta("Piazza Cavour","Manzoni",1.32);
+        Tappa tappa1 = new Tappa("Piazza Euclide",tratta1);
         Mezzo autobus1 = new Autobus(generateData(), Servizio.SERVIZIO,tratta1, LocalDateTime.now(),LocalDateTime.now(),100);
-
         Emissione_Biglietti d1 = new Distributore(Stato.ATTIVO);
         Emissione_Biglietti r1 = new Rivenditore(faker.company().name(), faker.address().country());
 
@@ -55,7 +56,7 @@ public class Application {
 
 
 
-
+        tappaDAO.saveTappa(tappa1);
        // trattaDao.saveSection(tratta1);
        // mezzoDAO.saveTransport(autobus1);
 
@@ -104,6 +105,7 @@ public class Application {
         LocalDate randomDate = LocalDate.of(year, month, day);
 
         return randomDate;
-
     }
+
+    
 }

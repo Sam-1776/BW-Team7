@@ -41,9 +41,12 @@ public abstract class Mezzo {
         this.periodo = periodo;
         this.servizio = servizio;
         this.tratta = tratta;
-
         this.partenza = partenza;
         this.arrivo = arrivo;
+    }
+
+    public void setListaBiglietto(List<Biglietto> listaBiglietto) {
+        this.listaBiglietto = listaBiglietto;
     }
 
     public LocalDate getPeriodo() {

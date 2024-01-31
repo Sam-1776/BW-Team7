@@ -45,6 +45,18 @@ public class TesseraDAO {
         }
     }
 
+    public Tessera findlastCard(long id){
+        try{
+            Tessera found = em.createQuery("SELECT c FROM Tessera c WHERE c.nominativo.id =: id", Tessera.class).setParameter("id", id).getSingleResult();
+            if (found != null){
+                return found;
+            }
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
+
 
 
 }

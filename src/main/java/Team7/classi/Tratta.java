@@ -1,6 +1,8 @@
 package Team7.classi;
 
 import Team7.superclassi.Mezzo;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,6 +11,8 @@ import javax.persistence.OneToMany;
 import java.util.List;
 
 @Entity
+@Getter
+@Setter
 public class Tratta {
     @Id
     @GeneratedValue
@@ -33,35 +37,5 @@ public class Tratta {
         this.tempoMedio = tempoMedio;
     }
 
-    public String getZonaPartenza() {
-        return zonaPartenza;
-    }
 
-    public void setZonaPartenza(String zonaPartenza) {
-        this.zonaPartenza = zonaPartenza;
-    }
-
-    public String getCapolinea() {
-        return capolinea;
-    }
-
-    public void setCapolinea(String capolinea) {
-        this.capolinea = capolinea;
-    }
-
-    public double getTempoMedio() {
-        return tempoMedio;
-    }
-
-    public void setTempoMedio(double tempoMedio) {
-        this.tempoMedio = tempoMedio;
-    }
-
-    public List<Mezzo> getListaMezzi() {
-        return listaMezzi;
-    }
-
-    public void setListaMezzi(List<Mezzo> listaMezzi) {
-        this.listaMezzi = listaMezzi;
-    }
 }

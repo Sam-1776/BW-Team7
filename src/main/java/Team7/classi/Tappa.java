@@ -1,8 +1,13 @@
 package Team7.classi;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 
 @Entity
+@Getter
+@Setter
 public class Tappa {
     @Id
     @GeneratedValue
@@ -22,19 +27,5 @@ public class Tappa {
         this.tratta = tratta;
     }
 
-    public String getNome() {
-        return nome;
-    }
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public Tratta getTratta() {
-        return tratta;
-    }
-
-    public void setTratta(Tratta tratta) {
-        this.tratta = tratta;
-    }
 }

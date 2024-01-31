@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Entity
 @Getter
 @Setter
-@NamedQuery(name = "Manutenzione_attuale", query = "Select * from Manutenzione where dataFine is null")
+@NamedQuery(name = "Manutenzione_attuale", query = "from Manutenzione where dataFine is null")
 public class Manutenzione {
 
     @Id

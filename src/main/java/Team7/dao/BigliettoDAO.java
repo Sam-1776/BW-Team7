@@ -1,6 +1,7 @@
 package Team7.dao;
 
 import Team7.superclassi.Biglietto;
+import Team7.superclassi.Emissione_Biglietti;
 import Team7.superclassi.Mezzo;
 
 import javax.persistence.EntityManager;
@@ -78,6 +79,15 @@ public class BigliettoDAO {
 
         return query.getResultList();
     }
+
+    public List<Biglietto> getBigliettiPerPuntoDiEmissione(Emissione_Biglietti emissione){
+        TypedQuery<Biglietto> query = em.createQuery("SELECT b FROM Biglietto b WHERE b.emissioneBiglietti=:emissioneBiglietti", Biglietto.class);
+        query.setParameter("emissioneBiglietti", emissione);
+        return query.getResultList();
+    };
+
+
+
 
     public List<Biglietto> getItAndCheckExistence(long id) {
         TypedQuery<Biglietto> getIt = em.createQuery("SELECT b FROM Biglietto b WHERE b.tessera.id =:id", Biglietto.class);

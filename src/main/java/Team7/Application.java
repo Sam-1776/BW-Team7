@@ -61,54 +61,54 @@ public class Application {
         Tratta tratta2 = new Tratta("Piazza Garibaldi", "Toledo", 0.00);
         tratta2.setTempoMedio(tratta2.calcoloTempoPrevisto().toSeconds());
 
-//        emissioneDAO.saveDb(d1);
+        emissioneDAO.saveDb(d1);
 
-//        Biglietto biglietto1 = new Biglietto(LocalDate.now(), d1);
-//        Tessera t = td.getById(101);
-//        Biglietto a1 = new Abbonamento(LocalDate.now(), d1, Periodicita.SETTIMANALE, t);
-//        Biglietto provaBi= new Biglietto(LocalDate.now(),d1);
-//        bigliettoDAO.saveBiglietto(provaBi);
-//        bigliettoDAO.saveBiglietto(biglietto1);
-//        bigliettoDAO.saveBiglietto(a1);
-//
-//
-//        tappaDAO.saveTappa(tappa1);
-//         trattaDao.saveSection(tratta1);
-//         mezzoDAO.saveTransport(autobus1);
-//
-//
-//        bigliettoDAO.timbraBiglietto(biglietto1,autobus1);
-//
-//        bigliettoDAO.timbraBiglietto(provaBi,autobus1);
-//
-//
-//        bigliettoDAO.timbraBiglietto(biglietto1,autobus1);
-//
-//
-//        System.out.println("Numeri biglietti timbrati sulla tratta "+ autobus1.getTratta() + "sono: " + bigliettoDAO.getBigliettiMezzo(autobus1).size());
-//        System.out.println("Numeri biglietti timbrati il giorno sono: " +bigliettoDAO.getBigliettiTimbratiInGiorno(LocalDate.now()).size());
-//
-//
-//
+        Biglietto biglietto1 = new Biglietto(LocalDate.now(), d1);
+       Tessera t = td.getById(101);
+       Biglietto a1 = new Abbonamento(LocalDate.now(), d1, Periodicita.SETTIMANALE, t);
+       Biglietto provaBi= new Biglietto(LocalDate.now(),d1);
+       bigliettoDAO.saveBiglietto(provaBi);
+       bigliettoDAO.saveBiglietto(biglietto1);
+       bigliettoDAO.saveBiglietto(a1);
 
-//        bigliettoDAO.saveBiglietto(biglietto1);
-//        bigliettoDAO.saveBiglietto(a1);
+       tappaDAO.saveTappa(tappa1);
+        trattaDao.saveSection(tratta1);
+         mezzoDAO.saveTransport(autobus1);
 
 
-//        tappaDAO.saveTappa(tappa1);
-       // trattaDao.saveSection(tratta1);
-       // mezzoDAO.saveTransport(autobus1);
+        bigliettoDAO.timbraBiglietto(biglietto1,autobus1);
+
+        bigliettoDAO.timbraBiglietto(provaBi,autobus1);
+
+
+        bigliettoDAO.timbraBiglietto(biglietto1,autobus1);
+
+
+        System.out.println("Numeri biglietti timbrati sulla tratta "+ autobus1.getTratta() + "sono: " + bigliettoDAO.getBigliettiMezzo(autobus1).size());
+        System.out.println("Numeri biglietti timbrati il giorno sono: " +bigliettoDAO.getBigliettiTimbratiInGiorno(LocalDate.now()).size());
 
 
 
-//        generateUserDb(ud);
-//        generateUserCard(td, ud);
-//        generateEmitter(emissioneDAO);
-//        createTicket(bigliettoDAO, emissioneDAO);
+
+       bigliettoDAO.saveBiglietto(biglietto1);
+       bigliettoDAO.saveBiglietto(a1);
+
+        tappaDAO.saveTappa(tappa1);
+        trattaDao.saveSection(tratta1);
+       mezzoDAO.saveTransport(autobus1);
+
+
+
+       generateUserDb(ud);
+        generateUserCard(td, ud);
+        generateEmitter(emissioneDAO);
+       createTicket(bigliettoDAO, emissioneDAO);
         Utente utente = ud.getById(1);
         Tessera tessera = new Tessera(LocalDate.now().minusYears(1), utente);
-//        td.saveDb(tessera);
+         td.saveDb(tessera);
         createTicketRivenditore(bigliettoDAO,emissioneDAO,td);
+
+        System.out.println(bigliettoDAO.getBigliettiPerPuntoDiEmissione(d1)); ;
 
 
     }

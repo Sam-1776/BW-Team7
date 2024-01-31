@@ -12,7 +12,6 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
@@ -36,13 +35,17 @@ public class Application {
         }
     };
 
+
+
+    static  Supplier<Tratta> generateTratta = () -> new Tratta(faker.address().streetName(),faker.address().streetName(), rdm.nextDouble(1.0,2.5));
+
     static  Supplier<Emissione_Biglietti> generateDealer = () -> new Rivenditore(faker.company().name(), faker.address().country());
 
     public static void main(String[] args) {
 
         EntityManager em = emf.createEntityManager();
-        UtenteDAO ud = new UtenteDAO(em);
-        TesseraDAO td = new TesseraDAO(em);
+        UtenteDAO utenteDAO = new UtenteDAO(em);
+        TesseraDAO tesseraDAO = new TesseraDAO(em);
         MezzoDAO mezzoDAO = new MezzoDAO(em);
         TrattaDAO trattaDao = new TrattaDAO(em);
         EmissioneDAO emissioneDAO = new EmissioneDAO(em);
@@ -50,88 +53,25 @@ public class Application {
         TappaDAO tappaDAO = new TappaDAO(em);
 
 
-        Tratta tratta1 = new Tratta("Piazza Cavour", "Manzoni", 1.32);
-        Tappa tappa1 = new Tappa("Piazza Euclide", tratta1);
-        Mezzo autobus1 = new Autobus(generateData(), Servizio.SERVIZIO, tratta1, LocalDateTime.now(), LocalDateTime.now(), 100);
-        Emissione_Biglietti d1 = new Distributore(Stato.ATTIVO);
-        Emissione_Biglietti r1 = new Rivenditore(faker.company().name(), faker.address().country());
-        Tratta tratta2 = new Tratta("Piazza Garibaldi", "Toledo", 0.00);
-        LocalDateTime primaPartenza = LocalDateTime.of(LocalDate.now(), LocalTime.of(12, 00));
-        tratta2.getTappe().add(new Tappa("Piazza Kennedy", primaPartenza, primaPartenza.plusMinutes(5)));
-        tratta2.getListaMezzi().add(autobus1);
-       // tratta2.setTempoMedio(tratta2.calcoloTempoPrevisto().toSeconds());
-        generateUserDb(ud);
+        //Creazione Utenti:
+       // generateUserDb(utenteDAO);
+        //Creazione Tessere:
+       // generateUserCard(tesseraDAO,utenteDAO);
 
+        //Creazione Distributore e Rivenditore:
+       // generateEmitter(emissioneDAO);
 
-        emissioneDAO.saveDb(d1);
+        //Creazione Biglietti
+       // createTicketRivenditore(bigliettoDAO,emissioneDAO,tesseraDAO,utenteDAO);
 
-        Biglietto biglietto1 = new Biglietto(LocalDate.now(), d1);
-       Tessera t = td.getById(101);
-       Biglietto a1 = new Abbonamento(LocalDate.now(), d1, Periodicita.SETTIMANALE, t);
-       Biglietto provaBi= new Biglietto(LocalDate.now(),d1);
-       bigliettoDAO.saveBiglietto(provaBi);
-       bigliettoDAO.saveBiglietto(biglietto1);
-       bigliettoDAO.saveBiglietto(a1);
+        //Creazione Tratte:
+        // generateTrattaDb(trattaDao);
 
-       tappaDAO.saveTappa(tappa1);
-        trattaDao.saveSection(tratta1);
-         mezzoDAO.saveTransport(autobus1);
-
-
-        bigliettoDAO.timbraBiglietto(biglietto1,autobus1);
-
-        bigliettoDAO.timbraBiglietto(provaBi,autobus1);
-
-
-        bigliettoDAO.timbraBiglietto(biglietto1,autobus1);
-
-
-        System.out.println("Numeri biglietti timbrati sulla tratta "+ autobus1.getTratta() + "sono: " + bigliettoDAO.getBigliettiMezzo(autobus1).size());
-        System.out.println("Numeri biglietti timbrati il giorno sono: " +bigliettoDAO.getBigliettiTimbratiInGiorno(LocalDate.now()).size());
+        //Creazione Mezzi:
+       // generateMezzoTratta(mezzoDAO,trattaDao);
 
 
 
-
-       bigliettoDAO.saveBiglietto(biglietto1);
-       bigliettoDAO.saveBiglietto(a1);
-
-        tappaDAO.saveTappa(tappa1);
-        trattaDao.saveSection(tratta1);
-       mezzoDAO.saveTransport(autobus1);
-       trattaDao.saveSection(tratta2);
-
-       mezzoDAO.percorriTappa(autobus1, tratta2.getTappe().get(0));
-       mezzoDAO.numeroPercorrenzaTappa(autobus1, tratta2.getTappe().get(0));
-
-
-
-
-        generateUserCard(td, ud);
-        generateEmitter(emissioneDAO);
-       createTicket(bigliettoDAO, emissioneDAO);
-        Utente utente = ud.getById(1);
-       Tessera tessera = new Tessera(LocalDate.now().minusYears(1), utente);
-       td.saveDb(tessera);
-       createTicketRivenditore(bigliettoDAO,emissioneDAO,td, ud);
-       // Tessera t =td.getById(172);
-       utente.setNumero_tessera(t);
-        ud.saveDb(utente);
-       bigliettoDAO.saveBiglietto(new Abbonamento(LocalDate.now().minusDays(8), emissioneDAO.getById(122), Periodicita.SETTIMANALE, td.getById(102)));
-        validationSeasonTicket(ud,td,bigliettoDAO);
-
-      /*  Tessera tessera = new Tessera(LocalDate.now().minusYears(1), utente);
-         td.saveDb(tessera);
-        createTicketRivenditore(bigliettoDAO,emissioneDAO,td);
-
-        System.out.println(bigliettoDAO.getBigliettiPerPuntoDiEmissione(d1)); ;*/
-
-//        generateUserDb(ud);
-//        generateUserCard(td, ud);
-//        generateEmitter(emissioneDAO);
-//        createTicket(bigliettoDAO, emissioneDAO);
-//        createTicketRivenditore(bigliettoDAO,emissioneDAO,td);
-        mezzoDAO.iniziaManutenzione(LocalDate.now(), autobus1);
-        mezzoDAO.fineManutenzione(LocalDate.now().plusDays(1L), autobus1);
 
 
     }
@@ -139,6 +79,28 @@ public class Application {
     public static void generateUserDb(UtenteDAO x) {
         for (int i = 0; i < 100; i++) {
             x.saveDb(generatoreUser.get());
+        }
+    }
+    public static void generateTrattaDb(TrattaDAO x) {
+        for (int i = 0; i < 5; i++) {
+            x.saveSection(generateTratta.get());
+        }
+    }
+    public static void generateMezzoTratta(MezzoDAO x, TrattaDAO y) {
+        for (int i = 0; i < 10; i++) {
+            long n = rdm.nextLong(174, 190);
+            Tratta u = y.getById(n);
+            if (u != null) {
+                if (rdm.nextInt(2) == 1){
+                    Mezzo mezzo = new Autobus(LocalDate.now(),Servizio.SERVIZIO,u,LocalDateTime.now(),LocalDateTime.now().plusHours(1),100);
+                    x.saveTransport(mezzo);
+                } else {
+                    Mezzo mezzo1 = new Tram(LocalDate.now(),Servizio.SERVIZIO,u,LocalDateTime.now(),LocalDateTime.now().plusHours(1),400);
+                    x.saveTransport(mezzo1);
+                };
+            } else {
+                i--;
+            }
         }
     }
 
@@ -176,6 +138,7 @@ public class Application {
 
     public static void makeCard(TesseraDAO x, UtenteDAO y){
         Scanner scanner = new Scanner(System.in);
+        System.out.println("Inserisci ID utente:");
         long id = scanner.nextLong();
         Utente u = y.getById(id);
         if (u != null && x.findlastCard(id) == null){
@@ -260,6 +223,7 @@ public class Application {
                 if (str.equals("si")){
                     makeCard(z, u);
                 }else {
+                    System.out.println("Biglietto erogato");
                     x.saveBiglietto(new Biglietto(LocalDate.now(), e));
                 }
             }

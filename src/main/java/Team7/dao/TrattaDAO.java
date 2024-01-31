@@ -23,4 +23,14 @@ public class TrattaDAO {
             System.out.println(e.getMessage());
         }
     }
+
+    public Tratta getById (long id){
+        Tratta found = em.find(Tratta.class, id);
+        if (found != null) {
+            return found;
+        }else {
+            System.out.println("Tratta non trovato");
+            return null;
+        }
+    }
 }

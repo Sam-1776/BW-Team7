@@ -4,10 +4,8 @@ import Team7.superclassi.Mezzo;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
+import java.time.Duration;
 import java.util.List;
 
 @Entity
@@ -16,17 +14,18 @@ import java.util.List;
 public class Tratta {
     @Id
     @GeneratedValue
-    private long id ;
+    private long id;
     private String zonaPartenza;
     private String capolinea;
 
     private double tempoMedio;
 
     @OneToMany(mappedBy = "tratta")
-    private  List<Mezzo> listaMezzi;
+    private List<Mezzo> listaMezzi;
 
     @OneToMany(mappedBy = "tratta")
-    private List<Tappa> tappa;
+    @Column(name = "tappa")
+    private List<Tappa> tappe;
 
     public Tratta() {
     }
@@ -35,6 +34,12 @@ public class Tratta {
         this.zonaPartenza = zonaPartenza;
         this.capolinea = capolinea;
         this.tempoMedio = tempoMedio;
+    }
+
+    public Duration calcoloTempoPrevisto() {
+        Tappa tappa1 = tappe.get(0);
+        Tappa tappaFinale = tappe.get(tappe.size() - 1);
+        return Duration.between(tappa1.getArrivo(), tappaFinale.getArrivo());
     }
 
 

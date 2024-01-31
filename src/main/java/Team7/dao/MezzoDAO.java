@@ -1,14 +1,22 @@
 package Team7.dao;
 
+import Team7.classi.Fermata;
 import Team7.classi.Manutenzione;
 import Team7.classi.Servizio;
+import Team7.classi.Tappa;
 import Team7.superclassi.Mezzo;
 import org.hibernate.Session;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MezzoDAO {
     private EntityManager em;
@@ -53,7 +61,7 @@ public class MezzoDAO {
             return;
         }
         mezzo.setServizio(Servizio.SERVIZIO);
-
+        //carico la named query dalla classe manutenzione
         Query query = em.unwrap(Session.class).getNamedQuery("Manutenzione_attuale");
 
         Manutenzione manutenzione = (Manutenzione) query.getSingleResult();
@@ -69,4 +77,34 @@ public class MezzoDAO {
         em.getTransaction().commit();
     }
 
+    public Long numeroPercorrenzaTappa(Mezzo mezzo, Tappa tappa) {
+        // criteriabuilder costruisce i criteri di ricerca della query
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<Long> criteriaQuery = builder.createQuery(Long.class);
+        Root<Fermata> fermataRoot = criteriaQuery.from(Fermata.class);
+
+        List<Predicate> predicateList = new ArrayList<>();
+        predicateList.add(builder.equal(fermataRoot.get("mezzo"), mezzo));
+        predicateList.add(builder.equal(fermataRoot.get("tappa"), tappa));
+
+        criteriaQuery
+                .select(builder.count(fermataRoot))
+                .where(builder.and(predicateList.toArray(new Predicate[0])));
+
+        return em.createQuery(criteriaQuery).getSingleResult();
+
+
+    }
+
+    public void percorriTappa(Mezzo mezzo, Tappa tappa) {
+        Fermata fermata = new Fermata();
+        fermata.setMezzo(mezzo);
+        fermata.setTappa(tappa);
+        fermata.setOrario(tappa.getArrivo());
+
+        em.getTransaction().begin();
+        em.merge(fermata);
+        em.getTransaction().commit();
+
+    }
 }

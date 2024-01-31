@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -18,6 +19,9 @@ public class Tappa {
     @JoinColumn(name = "tratta_id")
     private Tratta tratta;
 
+    private LocalDateTime arrivo;
+
+    private LocalDateTime arrivoProssimaTappa;
 
     public Tappa() {
     }
@@ -26,6 +30,7 @@ public class Tappa {
         this.nome = nome;
         this.tratta = tratta;
     }
+
 
 
 }

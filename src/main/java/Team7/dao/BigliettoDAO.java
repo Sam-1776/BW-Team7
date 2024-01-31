@@ -11,12 +11,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class BigliettoDAO {
-        private EntityManager em;
-        public BigliettoDAO(EntityManager em){
-            this.em = em;
-        }
+    private EntityManager em;
 
-    public void saveBiglietto(Biglietto biglietto){
+    public BigliettoDAO(EntityManager em) {
+        this.em = em;
+    }
+
+    public void saveBiglietto(Biglietto biglietto) {
         EntityTransaction transaction = em.getTransaction();
 
         try {
@@ -24,26 +25,28 @@ public class BigliettoDAO {
             em.persist(biglietto);
             transaction.commit();
             System.out.println("Elemento Salvato con successo");
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
 
-    public Biglietto getById (long id){
+    public Biglietto getById(long id) {
         Biglietto found = em.find(Biglietto.class, id);
         if (found != null) {
             return found;
-        }else {
+        } else {
             System.out.println("Biglietto non trovato");
             return null;
         }
     }
 
-    public List<Biglietto> getBigliettiMezzo(Mezzo mezzo){
+    public List<Biglietto> getBigliettiMezzo(Mezzo mezzo) {
         TypedQuery<Biglietto> query = em.createQuery("SELECT b FROM Biglietto b WHERE b.mezzo = :mezzo ", Biglietto.class);
         query.setParameter("mezzo", mezzo);
         return query.getResultList();
-    };
+    }
+
+    ;
 
     public void timbraBiglietto(Biglietto biglietto, Mezzo mezzo) {
         try {
@@ -74,10 +77,12 @@ public class BigliettoDAO {
         query.setParameter("fineGiorno", fineGiorno);
 
         return query.getResultList();
-    public List<Biglietto> getItAndCheckExistence(long id){
+    }
+
+    public List<Biglietto> getItAndCheckExistence(long id) {
         TypedQuery<Biglietto> getIt = em.createQuery("SELECT b FROM Biglietto b WHERE b.tessera.id =:id", Biglietto.class);
         getIt.setParameter("id", id);
-        if (getIt != null){
+        if (getIt != null) {
             return getIt.getResultList();
         }
         return null;

@@ -106,10 +106,14 @@ public class Application {
 //        generateEmitter(emissioneDAO);
 //        createTicket(bigliettoDAO, emissioneDAO);
         Utente utente = ud.getById(1);
-        Tessera tessera = new Tessera(LocalDate.now().minusYears(1), utente);
-//        td.saveDb(tessera);
-        createTicketRivenditore(bigliettoDAO,emissioneDAO,td);
-
+//        Tessera tessera = new Tessera(LocalDate.now().minusYears(1), utente);
+////        td.saveDb(tessera);
+//        createTicketRivenditore(bigliettoDAO,emissioneDAO,td);
+        Tessera t =td.getById(172);
+//        utente.setNumero_tessera(t);
+//        ud.saveDb(utente);
+//        bigliettoDAO.saveBiglietto(new Abbonamento(LocalDate.now().minusDays(8), emissioneDAO.getById(122), Periodicita.SETTIMANALE, td.getById(102)));
+        validationSeasonTicket(ud,td,bigliettoDAO);
 
     }
 
@@ -249,6 +253,54 @@ public class Application {
             x.saveBiglietto(new Abbonamento(LocalDate.now(), y, Periodicita.SETTIMANALE, z));
         }else {
             x.saveBiglietto(new Abbonamento(LocalDate.now(), y, Periodicita.MENSILE, z));
+        }
+    }
+
+    public static void validationSeasonTicket(UtenteDAO x, TesseraDAO y, BigliettoDAO z){
+        Scanner scanner = new Scanner(System.in);
+        String str = "";
+        System.out.println("Inserire id utente");
+        long id = scanner.nextLong();
+        Utente utente = x.getById(id);
+        if (utente != null && utente.getNumero_tessera() != null){
+            System.out.println("Controllo tessera");
+            Tessera tessera = y.getById(utente.getNumero_tessera().getId());
+            if (tessera != null){
+                List<Biglietto> abbonamento = z.getItAndCheckExistence(tessera.getId());
+                if (!abbonamento.isEmpty()){
+                    Biglietto ab = abbonamento.get(0);
+                    Periodicita periodo = ((Abbonamento)ab).getPeriodicita();
+                    LocalDate dayA = ab.getData();
+                    LocalDate dayC = LocalDate.now();
+                    if (periodo.equals(Periodicita.SETTIMANALE)){
+                        if (dayA.plusDays(7).equals(dayC) || dayC.isAfter(dayA.plusDays(7)) ){
+                            System.out.println("Abbonamento non valido" + "\n" + "vuoi rinnovarlo");
+                            Scanner risp = new Scanner(System.in);
+                            str = risp.nextLine();
+                            if (str.equals("si")){
+                                ab.setData(LocalDate.now());
+                                z.saveBiglietto(ab);
+                            }
+                        }else {
+                            System.out.println("Abbonamento valido");
+                        }
+                    }else {
+                        if (dayA.plusMonths(1).equals(dayC) || dayC.isAfter(dayA.plusMonths(1))){
+                            System.out.println("Abbonamento non valido" + "\n" + "vuoi rinnovarlo");
+                            Scanner risp = new Scanner(System.in);
+                            str = risp.nextLine();
+                            if (str.equals("si")){
+                                ab.setData(LocalDate.now());
+                                z.saveBiglietto(ab);
+                            }
+                        }
+                    }
+                }else {
+                    System.out.println("Non hai abbonamenti");
+                }
+            }
+        }else {
+            System.out.println("Non sei tesserato");
         }
     }
 

@@ -17,7 +17,7 @@ public class TappaDAO {
 
         try {
             transaction.begin();
-            em.persist(tappa);
+            em.merge(tappa);
             transaction.commit();
             System.out.println("Elemento Salvato con successo");
         } catch (Exception e){

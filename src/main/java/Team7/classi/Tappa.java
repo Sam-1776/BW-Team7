@@ -30,6 +30,12 @@ public class Tappa {
         this.nome = nome;
         this.tratta = tratta;
     }
+    public Tappa(String nome, LocalDateTime arrivo, LocalDateTime arrivoProssimaTappa) {
+        this.nome = nome;
+        this.arrivo = arrivo;
+        this.arrivoProssimaTappa = arrivoProssimaTappa;
+    }
+
 
 
 

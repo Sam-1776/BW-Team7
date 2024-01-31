@@ -92,15 +92,17 @@ public class MezzoDAO {
                 .select(builder.count(fermataRoot))
                 .where(builder.and(predicateList.toArray(new Predicate[0])));
 
-        return em.createQuery(criteriaQuery).getSingleResult();
+        Long times = em.createQuery(criteriaQuery).getSingleResult();
 
+        System.out.printf("Il mezzo %d è passato per %s %d volte", mezzo.getId(), tappa.getNome(), times);
 
+        return times;
     }
 
     public void percorriTappa(Mezzo mezzo, Tappa tappa) {
         Fermata fermata = new Fermata();
         fermata.setMezzo(mezzo);
-        fermata.setTappa(tappa);
+        fermata.setTappa(em.find(Tappa.class, tappa.getId()));
         fermata.setOrario(tappa.getArrivo());
 
         em.getTransaction().begin();

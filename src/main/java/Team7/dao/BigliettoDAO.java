@@ -23,11 +23,12 @@ public class BigliettoDAO {
 
         try {
             transaction.begin();
-            em.persist(biglietto);
+            em.merge(biglietto);
             transaction.commit();
             System.out.println("Elemento Salvato con successo");
         } catch (Exception e) {
             System.out.println(e.getMessage());
+            e.printStackTrace();
         }
     }
 

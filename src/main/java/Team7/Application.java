@@ -12,6 +12,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
@@ -55,8 +56,12 @@ public class Application {
         Emissione_Biglietti d1 = new Distributore(Stato.ATTIVO);
         Emissione_Biglietti r1 = new Rivenditore(faker.company().name(), faker.address().country());
         Tratta tratta2 = new Tratta("Piazza Garibaldi", "Toledo", 0.00);
+        LocalDateTime primaPartenza = LocalDateTime.of(LocalDate.now(), LocalTime.of(12, 00));
+        tratta2.getTappe().add(new Tappa("Piazza Kennedy", primaPartenza, primaPartenza.plusMinutes(5)));
+        tratta2.getListaMezzi().add(autobus1);
        // tratta2.setTempoMedio(tratta2.calcoloTempoPrevisto().toSeconds());
         generateUserDb(ud);
+
 
         emissioneDAO.saveDb(d1);
 
@@ -93,6 +98,10 @@ public class Application {
         tappaDAO.saveTappa(tappa1);
         trattaDao.saveSection(tratta1);
        mezzoDAO.saveTransport(autobus1);
+       trattaDao.saveSection(tratta2);
+
+       mezzoDAO.percorriTappa(autobus1, tratta2.getTappe().get(0));
+       mezzoDAO.numeroPercorrenzaTappa(autobus1, tratta2.getTappe().get(0));
 
 
 

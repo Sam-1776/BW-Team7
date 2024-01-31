@@ -4,10 +4,15 @@ import Team7.superclassi.Mezzo;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+
 
 import javax.persistence.*;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
+
 
 @Entity
 @Getter
@@ -26,6 +31,7 @@ public class Tratta {
     @ToString.Exclude
     private List<Mezzo> listaMezzi;
 
+    @Cascade(CascadeType.ALL)
     @OneToMany(mappedBy = "tratta")
     @Column(name = "tappa")
     @ToString.Exclude
@@ -38,6 +44,8 @@ public class Tratta {
         this.zonaPartenza = zonaPartenza;
         this.capolinea = capolinea;
         this.tempoMedio = tempoMedio;
+        this.tappe = new ArrayList<>();
+        this.listaMezzi = new ArrayList<>();
     }
 
     public Duration calcoloTempoPrevisto() {

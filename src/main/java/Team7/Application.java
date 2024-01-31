@@ -22,12 +22,10 @@ import java.util.function.Supplier;
 public class Application {
 
     public static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("gestione_trasporti");
-    private static Faker faker = new Faker(Locale.ITALY);
-    private static Random rdm = new Random();
+    private static final Faker faker = new Faker(Locale.ITALY);
+    private static final Random rdm = new Random();
 
-    static Supplier<Utente> generatoreUser = () -> {
-        return new Utente(faker.name().firstName(), faker.name().lastName(), rdm.nextInt(1950, 2010));
-    };
+    static Supplier<Utente> generatoreUser = () -> new Utente(faker.name().firstName(), faker.name().lastName(), rdm.nextInt(1950, 2010));
 
     static Supplier<Emissione_Biglietti> generateDispenser = () ->{
         if (rdm.nextLong(2) == 1){
@@ -37,9 +35,7 @@ public class Application {
         }
     };
 
-    static  Supplier<Emissione_Biglietti> generateDealer = () ->{
-        return new Rivenditore(faker.company().name(), faker.address().country());
-    };
+    static  Supplier<Emissione_Biglietti> generateDealer = () -> new Rivenditore(faker.company().name(), faker.address().country());
 
     public static void main(String[] args) {
 
@@ -105,7 +101,9 @@ public class Application {
 //        generateUserCard(td, ud);
 //        generateEmitter(emissioneDAO);
 //        createTicket(bigliettoDAO, emissioneDAO);
-        createTicketRivenditore(bigliettoDAO,emissioneDAO,td);
+//        createTicketRivenditore(bigliettoDAO,emissioneDAO,td);
+        mezzoDAO.iniziaManutenzione(LocalDate.now(), autobus1);
+        mezzoDAO.fineManutenzione(LocalDate.now().plusDays(1L), autobus1);
 
 
     }

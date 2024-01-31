@@ -3,6 +3,7 @@ package Team7.classi;
 import Team7.superclassi.Mezzo;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.Duration;
@@ -11,6 +12,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@ToString
 public class Tratta {
     @Id
     @GeneratedValue
@@ -21,10 +23,12 @@ public class Tratta {
     private double tempoMedio;
 
     @OneToMany(mappedBy = "tratta")
+    @ToString.Exclude
     private List<Mezzo> listaMezzi;
 
     @OneToMany(mappedBy = "tratta")
     @Column(name = "tappa")
+    @ToString.Exclude
     private List<Tappa> tappe;
 
     public Tratta() {
@@ -37,6 +41,9 @@ public class Tratta {
     }
 
     public Duration calcoloTempoPrevisto() {
+        if (tappe == null || tappe.isEmpty()) {
+            return Duration.ZERO;
+        }
         Tappa tappa1 = tappe.get(0);
         Tappa tappaFinale = tappe.get(tappe.size() - 1);
         return Duration.between(tappa1.getArrivo(), tappaFinale.getArrivo());

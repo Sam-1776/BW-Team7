@@ -53,11 +53,11 @@ public class MezzoDAO {
         em.merge(manutenzione);
         em.merge(mezzo);
         em.getTransaction().commit();
-        System.out.printf("la manutenzione del mezzo %d è iniziata", mezzo.getId());
+        System.out.printf("la manutenzione del mezzo %d è iniziata\n", mezzo.getId());
     }
     public void fineManutenzione(LocalDate dataFine, Mezzo mezzo) {
         if (mezzo.getServizio() == Servizio.SERVIZIO) {
-            System.out.printf("il mezzo %d è in servizio", mezzo.getId());
+            System.out.printf("il mezzo %d è in servizio\n", mezzo.getId());
             return;
         }
         mezzo.setServizio(Servizio.SERVIZIO);
@@ -66,7 +66,7 @@ public class MezzoDAO {
 
         Manutenzione manutenzione = (Manutenzione) query.getSingleResult();
         if (manutenzione == null) {
-            System.out.printf("Nessuna manutenzione in corso per il mezzo %d", mezzo.getId());
+            System.out.printf("Nessuna manutenzione in corso per il mezzo %d\n", mezzo.getId());
             return;
         }
         manutenzione.setDataFine(dataFine);
@@ -75,6 +75,7 @@ public class MezzoDAO {
         em.merge(mezzo);
         em.merge(manutenzione);
         em.getTransaction().commit();
+        System.out.printf("la manutenzione del mezzo %d è finita\n", mezzo.getId());
     }
 
     public Long numeroPercorrenzaTappa(Mezzo mezzo, Tappa tappa) {

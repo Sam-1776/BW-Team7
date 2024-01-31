@@ -74,5 +74,12 @@ public class BigliettoDAO {
         query.setParameter("fineGiorno", fineGiorno);
 
         return query.getResultList();
+    public List<Biglietto> getItAndCheckExistence(long id){
+        TypedQuery<Biglietto> getIt = em.createQuery("SELECT b FROM Biglietto b WHERE b.tessera.id =:id", Biglietto.class);
+        getIt.setParameter("id", id);
+        if (getIt != null){
+            return getIt.getResultList();
+        }
+        return null;
     }
 }

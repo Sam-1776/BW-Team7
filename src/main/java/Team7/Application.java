@@ -12,8 +12,10 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Locale;
 import java.util.Random;
+import java.util.Scanner;
 import java.util.function.Supplier;
 
 
@@ -25,6 +27,18 @@ public class Application {
 
     static Supplier<Utente> generatoreUser = () -> {
         return new Utente(faker.name().firstName(), faker.name().lastName(), rdm.nextInt(1950, 2010));
+    };
+
+    static Supplier<Emissione_Biglietti> generateDispenser = () ->{
+        if (rdm.nextLong(2) == 1){
+            return new Distributore(Stato.ATTIVO);
+        }else {
+            return new Distributore(Stato.FUORI_SERVIZIO);
+        }
+    };
+
+    static  Supplier<Emissione_Biglietti> generateDealer = () ->{
+        return new Rivenditore(faker.company().name(), faker.address().country());
     };
 
     public static void main(String[] args) {
@@ -45,7 +59,7 @@ public class Application {
         Emissione_Biglietti d1 = new Distributore(Stato.ATTIVO);
         Emissione_Biglietti r1 = new Rivenditore(faker.company().name(), faker.address().country());
 
-        emissioneDAO.saveDb(d1);
+//        emissioneDAO.saveDb(d1);
 
         Biglietto biglietto1 = new Biglietto(LocalDate.now(), d1);
         Tessera t = td.getById(101);
@@ -75,8 +89,21 @@ public class Application {
 
 
 
+//        bigliettoDAO.saveBiglietto(biglietto1);
+//        bigliettoDAO.saveBiglietto(a1);
 
 
+//        tappaDAO.saveTappa(tappa1);
+       // trattaDao.saveSection(tratta1);
+       // mezzoDAO.saveTransport(autobus1);
+
+
+
+//        generateUserDb(ud);
+//        generateUserCard(td, ud);
+//        generateEmitter(emissioneDAO);
+//        createTicket(bigliettoDAO, emissioneDAO);
+        createTicketRivenditore(bigliettoDAO,emissioneDAO,td);
 
 
     }
@@ -122,4 +149,74 @@ public class Application {
 
 
 
+    public static void generateEmitter(EmissioneDAO x){
+        for (int i = 0; i < 50; i++) {
+        long y = rdm.nextLong(1, 3);
+        System.out.println(y);
+            if (y == 1){
+                x.saveDb(generateDispenser.get());
+            }else {
+                x.saveDb(generateDealer.get());
+            }
+        }
+    }
+
+    public static void createTicket(BigliettoDAO x, EmissioneDAO y){
+        System.out.println("Inserire numero Distributore");
+        Scanner scanner = new Scanner(System.in);
+        long input = scanner.nextLong();
+        Emissione_Biglietti e = y.getAndCheck(input);
+        if (e != null){
+            x.saveBiglietto(new Biglietto(LocalDate.now(), e));
+            scanner.close();
+        }else {
+            System.out.println("Il distributore è fuori servizio");
+            scanner.close();
+        }
+    }
+
+    public static void createTicketRivenditore(BigliettoDAO x, EmissioneDAO y, TesseraDAO z){
+        Scanner scanner = new Scanner(System.in);
+        String str = "";
+        Scanner number = new Scanner(System.in);
+        System.out.println("Inserire numero Rivenditore");
+        long input = number.nextLong();
+        Emissione_Biglietti e = y.getAndCheckType(input);
+        if (e != null){
+            System.out.println("Hai una tessera?");
+            str = scanner.nextLine();
+            if (str.equals("si")){
+                System.out.println("Inserire numero tessera");
+                input = number.nextLong();
+                Tessera t = z.getById(input);
+                if (t != null){
+                    List<Biglietto> bList = x.getItAndCheckExistence(input);
+                    if (bList.isEmpty()){
+                        System.out.println("Che periodo vuoi l'abbonamento");
+                        str = scanner.nextLine();
+                        if (str.equals(Periodicita.SETTIMANALE.toString().toLowerCase())){
+                            x.saveBiglietto(new Abbonamento(LocalDate.now(), e, Periodicita.SETTIMANALE, t));
+                        }else {
+                            x.saveBiglietto(new Abbonamento(LocalDate.now(), e, Periodicita.MENSILE, t));
+                        }
+                    }else {
+                        System.out.println("Hai già un abbonamento");
+                    }
+                }
+            }else {
+                System.out.println("vuoi tesserarti?");
+                str = scanner.nextLine();
+                if (str.equals("si")){
+                    System.out.println("WIP");
+                }else {
+                    x.saveBiglietto(new Biglietto(LocalDate.now(), e));
+                }
+            }
+        }else {
+            System.out.println("Rivenditore non trovato");
+        }
+
+    }
+
+    
 }

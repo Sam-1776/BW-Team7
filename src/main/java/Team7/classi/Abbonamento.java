@@ -27,4 +27,8 @@ public class Abbonamento extends Biglietto {
         this.periodicita = periodicita;
         this.tessera = tessera;
     }
+
+    public Tessera getTessera() {
+        return tessera;
+    }
 }

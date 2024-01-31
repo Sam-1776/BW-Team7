@@ -53,6 +53,9 @@ public class Application {
         TappaDAO tappaDAO = new TappaDAO(em);
 
 
+
+        //CREAZIONE ELEMENTI RICHIESTI GENERATI AUTOMATICAMENTE!!!
+
         //Creazione Utenti:
        // generateUserDb(utenteDAO);
         //Creazione Tessere:
@@ -69,6 +72,24 @@ public class Application {
 
         //Creazione Mezzi:
        // generateMezzoTratta(mezzoDAO,trattaDao);
+
+        //Controllo numeri biglietti erogati in un giorno specifico
+        //System.out.println(bigliettoDAO.getBigliettiTotali(LocalDate.now()));
+
+
+        //SERVIZI DELL'APPLICAZIONE
+
+        //Controllo biglietti emessi da un distrubutore o da un rivenditore:
+        //Emissione_Biglietti emissione1 = emissioneDAO.getById(122);
+        //System.out.println(bigliettoDAO.getBigliettiPerPuntoDiEmissione(emissione1));
+
+
+
+        
+
+
+
+
 
 
 

@@ -55,21 +55,21 @@ public class Application {
         Emissione_Biglietti d1 = new Distributore(Stato.ATTIVO);
         Emissione_Biglietti r1 = new Rivenditore(faker.company().name(), faker.address().country());
         Tratta tratta2 = new Tratta("Piazza Garibaldi", "Toledo", 0.00);
-        tratta2.setTempoMedio(tratta2.calcoloTempoPrevisto().toSeconds());
+       // tratta2.setTempoMedio(tratta2.calcoloTempoPrevisto().toSeconds());
+        generateUserDb(ud);
 
-//        emissioneDAO.saveDb(d1);
+        emissioneDAO.saveDb(d1);
 
         Biglietto biglietto1 = new Biglietto(LocalDate.now(), d1);
-        Tessera t = td.getById(101);
-        Biglietto a1 = new Abbonamento(LocalDate.now(), d1, Periodicita.SETTIMANALE, t);
-        Biglietto provaBi= new Biglietto(LocalDate.now(),d1);
-        bigliettoDAO.saveBiglietto(provaBi);
-        bigliettoDAO.saveBiglietto(biglietto1);
-        bigliettoDAO.saveBiglietto(a1);
+       Tessera t = td.getById(101);
+       Biglietto a1 = new Abbonamento(LocalDate.now(), d1, Periodicita.SETTIMANALE, t);
+       Biglietto provaBi= new Biglietto(LocalDate.now(),d1);
+       bigliettoDAO.saveBiglietto(provaBi);
+       bigliettoDAO.saveBiglietto(biglietto1);
+       bigliettoDAO.saveBiglietto(a1);
 
-
-        tappaDAO.saveTappa(tappa1);
-         trattaDao.saveSection(tratta1);
+       tappaDAO.saveTappa(tappa1);
+        trattaDao.saveSection(tratta1);
          mezzoDAO.saveTransport(autobus1);
 
 
@@ -87,15 +87,34 @@ public class Application {
 
 
 
-//        bigliettoDAO.saveBiglietto(biglietto1);
-//        bigliettoDAO.saveBiglietto(a1);
+       bigliettoDAO.saveBiglietto(biglietto1);
+       bigliettoDAO.saveBiglietto(a1);
+
+        tappaDAO.saveTappa(tappa1);
+        trattaDao.saveSection(tratta1);
+       mezzoDAO.saveTransport(autobus1);
 
 
-//        tappaDAO.saveTappa(tappa1);
-       // trattaDao.saveSection(tratta1);
-       // mezzoDAO.saveTransport(autobus1);
 
 
+        generateUserCard(td, ud);
+        generateEmitter(emissioneDAO);
+       createTicket(bigliettoDAO, emissioneDAO);
+        Utente utente = ud.getById(1);
+       Tessera tessera = new Tessera(LocalDate.now().minusYears(1), utente);
+       td.saveDb(tessera);
+       createTicketRivenditore(bigliettoDAO,emissioneDAO,td);
+       // Tessera t =td.getById(172);
+       utente.setNumero_tessera(t);
+        ud.saveDb(utente);
+       bigliettoDAO.saveBiglietto(new Abbonamento(LocalDate.now().minusDays(8), emissioneDAO.getById(122), Periodicita.SETTIMANALE, td.getById(102)));
+        validationSeasonTicket(ud,td,bigliettoDAO);
+
+      /*  Tessera tessera = new Tessera(LocalDate.now().minusYears(1), utente);
+         td.saveDb(tessera);
+        createTicketRivenditore(bigliettoDAO,emissioneDAO,td);
+
+        System.out.println(bigliettoDAO.getBigliettiPerPuntoDiEmissione(d1)); ;*/
 
 //        generateUserDb(ud);
 //        generateUserCard(td, ud);
@@ -190,17 +209,24 @@ public class Application {
                 input = number.nextLong();
                 Tessera t = z.getById(input);
                 if (t != null){
-                    List<Biglietto> bList = x.getItAndCheckExistence(input);
-                    if (bList.isEmpty()){
-                        System.out.println("Che periodo vuoi l'abbonamento");
+                    if (checkExpiration(t) == true){
+                        System.out.println("Tessera scaduta" + "\n" + "vuoi rinnovarlo?");
                         str = scanner.nextLine();
-                        if (str.equals(Periodicita.SETTIMANALE.toString().toLowerCase())){
-                            x.saveBiglietto(new Abbonamento(LocalDate.now(), e, Periodicita.SETTIMANALE, t));
-                        }else {
-                            x.saveBiglietto(new Abbonamento(LocalDate.now(), e, Periodicita.MENSILE, t));
+                        if (str.equals("si")){
+                            t.setData(LocalDate.now());
+                            t.setData_scadenza(LocalDate.now().plusYears(1));
+                            z.saveDb(t);
+                            makeSeasonTicket(x,e,t);
+                        }else{
+                            x.saveBiglietto(new Biglietto(LocalDate.now(), e));
                         }
                     }else {
-                        System.out.println("Hai già un abbonamento");
+                        List<Biglietto> bList = x.getItAndCheckExistence(input);
+                        if (bList.isEmpty()){
+                            makeSeasonTicket(x,e,t);
+                        }else {
+                            System.out.println("Hai già un abbonamento");
+                        }
                     }
                 }
             }else {
@@ -218,5 +244,75 @@ public class Application {
 
     }
 
-    
+    public static boolean checkExpiration(Tessera y){
+        int yearT = y.getData_scadenza().getYear();
+        int monthT = y.getData_scadenza().getMonthValue();
+        int year = LocalDate.now().getYear();
+        int month = LocalDate.now().getMonthValue();
+        if (yearT == year && monthT >= month){
+            return true;
+        }
+        return false;
+    }
+
+    public static void makeSeasonTicket(BigliettoDAO x, Emissione_Biglietti y, Tessera z){
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Che periodo vuoi l'abbonamento");
+        String str = scanner.nextLine();
+        if (str.equals(Periodicita.SETTIMANALE.toString().toLowerCase())){
+            x.saveBiglietto(new Abbonamento(LocalDate.now(), y, Periodicita.SETTIMANALE, z));
+        }else {
+            x.saveBiglietto(new Abbonamento(LocalDate.now(), y, Periodicita.MENSILE, z));
+        }
+    }
+
+    public static void validationSeasonTicket(UtenteDAO x, TesseraDAO y, BigliettoDAO z){
+        Scanner scanner = new Scanner(System.in);
+        String str = "";
+        System.out.println("Inserire id utente");
+        long id = scanner.nextLong();
+        Utente utente = x.getById(id);
+        if (utente != null && utente.getNumero_tessera() != null){
+            System.out.println("Controllo tessera");
+            Tessera tessera = y.getById(utente.getNumero_tessera().getId());
+            if (tessera != null){
+                List<Biglietto> abbonamento = z.getItAndCheckExistence(tessera.getId());
+                if (!abbonamento.isEmpty()){
+                    Biglietto ab = abbonamento.get(0);
+                    Periodicita periodo = ((Abbonamento)ab).getPeriodicita();
+                    LocalDate dayA = ab.getData();
+                    LocalDate dayC = LocalDate.now();
+                    if (periodo.equals(Periodicita.SETTIMANALE)){
+                        if (dayA.plusDays(7).equals(dayC) || dayC.isAfter(dayA.plusDays(7)) ){
+                            System.out.println("Abbonamento non valido" + "\n" + "vuoi rinnovarlo");
+                            Scanner risp = new Scanner(System.in);
+                            str = risp.nextLine();
+                            if (str.equals("si")){
+                                ab.setData(LocalDate.now());
+                                z.saveBiglietto(ab);
+                            }
+                        }else {
+                            System.out.println("Abbonamento valido");
+                        }
+                    }else {
+                        if (dayA.plusMonths(1).equals(dayC) || dayC.isAfter(dayA.plusMonths(1))){
+                            System.out.println("Abbonamento non valido" + "\n" + "vuoi rinnovarlo");
+                            Scanner risp = new Scanner(System.in);
+                            str = risp.nextLine();
+                            if (str.equals("si")){
+                                ab.setData(LocalDate.now());
+                                z.saveBiglietto(ab);
+                            }
+                        }
+                    }
+                }else {
+                    System.out.println("Non hai abbonamenti");
+                }
+            }
+        }else {
+            System.out.println("Non sei tesserato");
+        }
+    }
+
+
 }

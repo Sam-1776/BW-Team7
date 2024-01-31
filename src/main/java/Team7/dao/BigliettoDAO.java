@@ -88,6 +88,20 @@ public class BigliettoDAO {
     };
 
 
+    public List<Biglietto> getBigliettiTotali(LocalDate giorno) {
+
+        TypedQuery<Biglietto> query = em.createQuery("SELECT b FROM Biglietto b WHERE b.data=:giorno", Biglietto.class);
+
+
+        query.setParameter("giorno", giorno);
+
+        return query.getResultList();
+    }
+
+
+
+
+
 
 
     public List<Biglietto> getItAndCheckExistence(long id) {

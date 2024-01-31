@@ -112,7 +112,7 @@ public class Application {
         Utente utente = ud.getById(1);
        Tessera tessera = new Tessera(LocalDate.now().minusYears(1), utente);
        td.saveDb(tessera);
-       createTicketRivenditore(bigliettoDAO,emissioneDAO,td);
+       createTicketRivenditore(bigliettoDAO,emissioneDAO,td, ud);
        // Tessera t =td.getById(172);
        utente.setNumero_tessera(t);
         ud.saveDb(utente);
@@ -174,6 +174,22 @@ public class Application {
         return randomDate;
     }
 
+    public static void makeCard(TesseraDAO x, UtenteDAO y){
+        Scanner scanner = new Scanner(System.in);
+        long id = scanner.nextLong();
+        Utente u = y.getById(id);
+        if (u != null && x.findlastCard(id) == null){
+            x.saveDb(new Tessera(LocalDate.now(), u));
+            Tessera t = x.findlastCard(id);
+            if (t != null){
+                u.setNumero_tessera(t);
+                y.saveDb(u);
+            }
+        }else {
+            System.out.println("Sei già tesserato");
+        }
+    }
+
 
 
 
@@ -203,7 +219,7 @@ public class Application {
         }
     }
 
-    public static void createTicketRivenditore(BigliettoDAO x, EmissioneDAO y, TesseraDAO z){
+    public static void createTicketRivenditore(BigliettoDAO x, EmissioneDAO y, TesseraDAO z, UtenteDAO u){
         Scanner scanner = new Scanner(System.in);
         String str = "";
         Scanner number = new Scanner(System.in);
@@ -242,7 +258,7 @@ public class Application {
                 System.out.println("vuoi tesserarti?");
                 str = scanner.nextLine();
                 if (str.equals("si")){
-                    System.out.println("WIP");
+                    makeCard(z, u);
                 }else {
                     x.saveBiglietto(new Biglietto(LocalDate.now(), e));
                 }

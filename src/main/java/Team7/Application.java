@@ -61,33 +61,33 @@ public class Application {
 
 //        emissioneDAO.saveDb(d1);
 
-        Biglietto biglietto1 = new Biglietto(LocalDate.now(), d1);
-        Tessera t = td.getById(101);
-        Biglietto a1 = new Abbonamento(LocalDate.now(), d1, Periodicita.SETTIMANALE, t);
-        Biglietto provaBi= new Biglietto(LocalDate.now(),d1);
-        bigliettoDAO.saveBiglietto(provaBi);
-        bigliettoDAO.saveBiglietto(biglietto1);
-        bigliettoDAO.saveBiglietto(a1);
-
-
-        tappaDAO.saveTappa(tappa1);
-         trattaDao.saveSection(tratta1);
-         mezzoDAO.saveTransport(autobus1);
-
-
-        bigliettoDAO.timbraBiglietto(biglietto1,autobus1);
-
-        bigliettoDAO.timbraBiglietto(provaBi,autobus1);
-
-
-        bigliettoDAO.timbraBiglietto(biglietto1,autobus1);
-
-
-        System.out.println("Numeri biglietti timbrati sulla tratta "+ autobus1.getTratta() + "sono: " + bigliettoDAO.getBigliettiMezzo(autobus1).size());
-        System.out.println("Numeri biglietti timbrati il giorno sono: " +bigliettoDAO.getBigliettiTimbratiInGiorno(LocalDate.now()).size());
-
-
-
+//        Biglietto biglietto1 = new Biglietto(LocalDate.now(), d1);
+//        Tessera t = td.getById(101);
+//        Biglietto a1 = new Abbonamento(LocalDate.now(), d1, Periodicita.SETTIMANALE, t);
+//        Biglietto provaBi= new Biglietto(LocalDate.now(),d1);
+//        bigliettoDAO.saveBiglietto(provaBi);
+//        bigliettoDAO.saveBiglietto(biglietto1);
+//        bigliettoDAO.saveBiglietto(a1);
+//
+//
+//        tappaDAO.saveTappa(tappa1);
+//         trattaDao.saveSection(tratta1);
+//         mezzoDAO.saveTransport(autobus1);
+//
+//
+//        bigliettoDAO.timbraBiglietto(biglietto1,autobus1);
+//
+//        bigliettoDAO.timbraBiglietto(provaBi,autobus1);
+//
+//
+//        bigliettoDAO.timbraBiglietto(biglietto1,autobus1);
+//
+//
+//        System.out.println("Numeri biglietti timbrati sulla tratta "+ autobus1.getTratta() + "sono: " + bigliettoDAO.getBigliettiMezzo(autobus1).size());
+//        System.out.println("Numeri biglietti timbrati il giorno sono: " +bigliettoDAO.getBigliettiTimbratiInGiorno(LocalDate.now()).size());
+//
+//
+//
 
 //        bigliettoDAO.saveBiglietto(biglietto1);
 //        bigliettoDAO.saveBiglietto(a1);
@@ -103,6 +103,9 @@ public class Application {
 //        generateUserCard(td, ud);
 //        generateEmitter(emissioneDAO);
 //        createTicket(bigliettoDAO, emissioneDAO);
+        Utente utente = ud.getById(1);
+        Tessera tessera = new Tessera(LocalDate.now().minusYears(1), utente);
+//        td.saveDb(tessera);
         createTicketRivenditore(bigliettoDAO,emissioneDAO,td);
 
 
@@ -190,17 +193,24 @@ public class Application {
                 input = number.nextLong();
                 Tessera t = z.getById(input);
                 if (t != null){
-                    List<Biglietto> bList = x.getItAndCheckExistence(input);
-                    if (bList.isEmpty()){
-                        System.out.println("Che periodo vuoi l'abbonamento");
+                    if (checkExpiration(t) == true){
+                        System.out.println("Tessera scaduta" + "\n" + "vuoi rinnovarlo?");
                         str = scanner.nextLine();
-                        if (str.equals(Periodicita.SETTIMANALE.toString().toLowerCase())){
-                            x.saveBiglietto(new Abbonamento(LocalDate.now(), e, Periodicita.SETTIMANALE, t));
-                        }else {
-                            x.saveBiglietto(new Abbonamento(LocalDate.now(), e, Periodicita.MENSILE, t));
+                        if (str.equals("si")){
+                            t.setData(LocalDate.now());
+                            t.setData_scadenza(LocalDate.now().plusYears(1));
+                            z.saveDb(t);
+                            makeSeasonTicket(x,e,t);
+                        }else{
+                            x.saveBiglietto(new Biglietto(LocalDate.now(), e));
                         }
                     }else {
-                        System.out.println("Hai già un abbonamento");
+                        List<Biglietto> bList = x.getItAndCheckExistence(input);
+                        if (bList.isEmpty()){
+                            makeSeasonTicket(x,e,t);
+                        }else {
+                            System.out.println("Hai già un abbonamento");
+                        }
                     }
                 }
             }else {
@@ -216,6 +226,28 @@ public class Application {
             System.out.println("Rivenditore non trovato");
         }
 
+    }
+
+    public static boolean checkExpiration(Tessera y){
+        int yearT = y.getData_scadenza().getYear();
+        int monthT = y.getData_scadenza().getMonthValue();
+        int year = LocalDate.now().getYear();
+        int month = LocalDate.now().getMonthValue();
+        if (yearT == year && monthT >= month){
+            return true;
+        }
+        return false;
+    }
+
+    public static void makeSeasonTicket(BigliettoDAO x, Emissione_Biglietti y, Tessera z){
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Che periodo vuoi l'abbonamento");
+        String str = scanner.nextLine();
+        if (str.equals(Periodicita.SETTIMANALE.toString().toLowerCase())){
+            x.saveBiglietto(new Abbonamento(LocalDate.now(), y, Periodicita.SETTIMANALE, z));
+        }else {
+            x.saveBiglietto(new Abbonamento(LocalDate.now(), y, Periodicita.MENSILE, z));
+        }
     }
 
     

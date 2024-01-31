@@ -58,6 +58,8 @@ public class Application {
         Mezzo autobus1 = new Autobus(generateData(), Servizio.SERVIZIO, tratta1, LocalDateTime.now(), LocalDateTime.now(), 100);
         Emissione_Biglietti d1 = new Distributore(Stato.ATTIVO);
         Emissione_Biglietti r1 = new Rivenditore(faker.company().name(), faker.address().country());
+        Tratta tratta2 = new Tratta("Piazza Garibaldi", "Toledo", 0.00);
+        tratta2.setTempoMedio(tratta2.calcoloTempoPrevisto().toSeconds());
 
 //        emissioneDAO.saveDb(d1);
 

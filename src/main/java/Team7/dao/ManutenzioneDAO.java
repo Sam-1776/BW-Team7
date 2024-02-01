@@ -8,7 +8,7 @@ import javax.persistence.TypedQuery;
 import java.util.List;
 
 public class ManutenzioneDAO {
-    EntityManager em;
+  private EntityManager em;
 
     ManutenzioneDAO(EntityManager em){
         this.em = em;

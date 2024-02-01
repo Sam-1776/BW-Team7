@@ -27,19 +27,18 @@ public class Application {
 
     static Supplier<Utente> generatoreUser = () -> new Utente(faker.name().firstName(), faker.name().lastName(), rdm.nextInt(1950, 2010));
 
-    static Supplier<Emissione_Biglietti> generateDispenser = () ->{
-        if (rdm.nextLong(2) == 1){
+    static Supplier<Emissione_Biglietti> generateDispenser = () -> {
+        if (rdm.nextLong(2) == 1) {
             return new Distributore(Stato.ATTIVO);
-        }else {
+        } else {
             return new Distributore(Stato.FUORI_SERVIZIO);
         }
     };
 
 
+    static Supplier<Tratta> generateTratta = () -> new Tratta(faker.address().streetName(), faker.address().streetName(), rdm.nextDouble(1.0, 2.5));
 
-    static  Supplier<Tratta> generateTratta = () -> new Tratta(faker.address().streetName(),faker.address().streetName(), rdm.nextDouble(1.0,2.5));
-
-    static  Supplier<Emissione_Biglietti> generateDealer = () -> new Rivenditore(faker.company().name(), faker.address().country());
+    static Supplier<Emissione_Biglietti> generateDealer = () -> new Rivenditore(faker.company().name(), faker.address().country());
 
     public static void main(String[] args) {
 
@@ -54,24 +53,21 @@ public class Application {
 
 
         //Creazione Utenti:
-       // generateUserDb(utenteDAO);
+        // generateUserDb(utenteDAO);
         //Creazione Tessere:
-       // generateUserCard(tesseraDAO,utenteDAO);
+        // generateUserCard(tesseraDAO,utenteDAO);
 
         //Creazione Distributore e Rivenditore:
-       // generateEmitter(emissioneDAO);
+        // generateEmitter(emissioneDAO);
 
         //Creazione Biglietti
-       // createTicketRivenditore(bigliettoDAO,emissioneDAO,tesseraDAO,utenteDAO);
+        // createTicketRivenditore(bigliettoDAO,emissioneDAO,tesseraDAO,utenteDAO);
 
         //Creazione Tratte:
         // generateTrattaDb(trattaDao);
 
         //Creazione Mezzi:
-       // generateMezzoTratta(mezzoDAO,trattaDao);
-
-
-
+        // generateMezzoTratta(mezzoDAO,trattaDao);
 
 
     }
@@ -81,23 +77,26 @@ public class Application {
             x.saveDb(generatoreUser.get());
         }
     }
+
     public static void generateTrattaDb(TrattaDAO x) {
         for (int i = 0; i < 5; i++) {
             x.saveSection(generateTratta.get());
         }
     }
+
     public static void generateMezzoTratta(MezzoDAO x, TrattaDAO y) {
         for (int i = 0; i < 10; i++) {
             long n = rdm.nextLong(174, 190);
             Tratta u = y.getById(n);
             if (u != null) {
-                if (rdm.nextInt(2) == 1){
-                    Mezzo mezzo = new Autobus(LocalDate.now(),Servizio.SERVIZIO,u,LocalDateTime.now(),LocalDateTime.now().plusHours(1),100);
+                if (rdm.nextInt(2) == 1) {
+                    Mezzo mezzo = new Autobus(LocalDate.now(), Servizio.SERVIZIO, u, LocalDateTime.now(), LocalDateTime.now().plusHours(1), 100);
                     x.saveTransport(mezzo);
                 } else {
-                    Mezzo mezzo1 = new Tram(LocalDate.now(),Servizio.SERVIZIO,u,LocalDateTime.now(),LocalDateTime.now().plusHours(1),400);
+                    Mezzo mezzo1 = new Tram(LocalDate.now(), Servizio.SERVIZIO, u, LocalDateTime.now(), LocalDateTime.now().plusHours(1), 400);
                     x.saveTransport(mezzo1);
-                };
+                }
+                ;
             } else {
                 i--;
             }
@@ -136,171 +135,173 @@ public class Application {
         return randomDate;
     }
 
-    public static void makeCard(TesseraDAO x, UtenteDAO y){
+    public static void makeCard(TesseraDAO x, UtenteDAO y) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Inserisci ID utente:");
         long id = scanner.nextLong();
         Utente u = y.getById(id);
-        if (u != null && x.findlastCard(id) == null){
+        if (u != null && x.findlastCard(id) == null) {
             x.saveDb(new Tessera(LocalDate.now(), u));
             Tessera t = x.findlastCard(id);
-            if (t != null){
+            if (t != null) {
                 u.setNumero_tessera(t);
                 y.saveDb(u);
             }
-        }else {
+        } else {
             System.out.println("Sei già tesserato");
         }
     }
 
 
-
-
-    public static void generateEmitter(EmissioneDAO x){
+    public static void generateEmitter(EmissioneDAO x) {
         for (int i = 0; i < 50; i++) {
-        long y = rdm.nextLong(1, 3);
-        System.out.println(y);
-            if (y == 1){
+            long y = rdm.nextLong(1, 3);
+            System.out.println(y);
+            if (y == 1) {
                 x.saveDb(generateDispenser.get());
-            }else {
+            } else {
                 x.saveDb(generateDealer.get());
             }
         }
     }
 
-    public static void createTicket(BigliettoDAO x, EmissioneDAO y){
+    public static void createTicket(BigliettoDAO x, EmissioneDAO y) {
         System.out.println("Inserire numero Distributore");
         Scanner scanner = new Scanner(System.in);
         long input = scanner.nextLong();
         Emissione_Biglietti e = y.getAndCheck(input);
-        if (e != null){
+        if (e != null) {
             x.saveBiglietto(new Biglietto(LocalDate.now(), e));
             scanner.close();
-        }else {
+        } else {
             System.out.println("Il distributore è fuori servizio");
             scanner.close();
         }
     }
 
-    public static void createTicketRivenditore(BigliettoDAO x, EmissioneDAO y, TesseraDAO z, UtenteDAO u){
+    public static void createTicketRivenditore(BigliettoDAO x, EmissioneDAO y, TesseraDAO z, UtenteDAO u) {
         Scanner scanner = new Scanner(System.in);
-        String str = "";
+        String str;
         Scanner number = new Scanner(System.in);
         System.out.println("Inserire numero Rivenditore");
         long input = number.nextLong();
         Emissione_Biglietti e = y.getAndCheckType(input);
-        if (e != null){
-            System.out.println("Hai una tessera?");
-            str = scanner.nextLine();
-            if (str.equals("si")){
-                System.out.println("Inserire numero tessera");
-                input = number.nextLong();
-                Tessera t = z.getById(input);
-                if (t != null){
-                    if (checkExpiration(t) == true){
-                        System.out.println("Tessera scaduta" + "\n" + "vuoi rinnovarlo?");
-                        str = scanner.nextLine();
-                        if (str.equals("si")){
-                            t.setData(LocalDate.now());
-                            t.setData_scadenza(LocalDate.now().plusYears(1));
-                            z.saveDb(t);
-                            makeSeasonTicket(x,e,t);
-                        }else{
-                            x.saveBiglietto(new Biglietto(LocalDate.now(), e));
-                        }
-                    }else {
-                        List<Biglietto> bList = x.getItAndCheckExistence(input);
-                        if (bList.isEmpty()){
-                            makeSeasonTicket(x,e,t);
-                        }else {
-                            System.out.println("Hai già un abbonamento");
-                        }
-                    }
-                }
-            }else {
-                System.out.println("vuoi tesserarti?");
+        if (e == null) {
+            System.out.println("Rivenditore non trovato");
+            return;
+        }
+        System.out.println("Hai una tessera?");
+        str = scanner.nextLine();
+        if (str.equals("si")) {
+            System.out.println("Inserire numero tessera");
+            input = number.nextLong();
+            Tessera t = z.getById(input);
+            if (t == null) {
+                return;
+            }
+            if (checkExpiration(t)) {
+                System.out.println("Tessera scaduta" + "\n" + "vuoi rinnovarlo?");
                 str = scanner.nextLine();
-                if (str.equals("si")){
-                    makeCard(z, u);
-                }else {
-                    System.out.println("Biglietto erogato");
+                if (str.equals("si")) {
+                    t.setData(LocalDate.now());
+                    t.setData_scadenza(LocalDate.now().plusYears(1));
+                    z.saveDb(t);
+                    makeSeasonTicket(x, e, t);
+                } else {
                     x.saveBiglietto(new Biglietto(LocalDate.now(), e));
                 }
+            } else {
+                List<Biglietto> bList = x.getItAndCheckExistence(input);
+                if (bList.isEmpty()) {
+                    makeSeasonTicket(x, e, t);
+                } else {
+                    System.out.println("Hai già un abbonamento");
+                }
             }
-        }else {
-            System.out.println("Rivenditore non trovato");
+        } else {
+            System.out.println("vuoi tesserarti?");
+            str = scanner.nextLine();
+            if (str.equals("si")) {
+                makeCard(z, u);
+            } else {
+                System.out.println("Biglietto erogato");
+                x.saveBiglietto(new Biglietto(LocalDate.now(), e));
+            }
         }
+
 
     }
 
-    public static boolean checkExpiration(Tessera y){
+    public static boolean checkExpiration(Tessera y) {
         int yearT = y.getData_scadenza().getYear();
         int monthT = y.getData_scadenza().getMonthValue();
         int year = LocalDate.now().getYear();
         int month = LocalDate.now().getMonthValue();
-        if (yearT == year && monthT >= month){
-            return true;
-        }
-        return false;
+        return yearT == year && monthT >= month;
     }
 
-    public static void makeSeasonTicket(BigliettoDAO x, Emissione_Biglietti y, Tessera z){
+    public static void makeSeasonTicket(BigliettoDAO x, Emissione_Biglietti y, Tessera z) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Che periodo vuoi l'abbonamento");
         String str = scanner.nextLine();
-        if (str.equals(Periodicita.SETTIMANALE.toString().toLowerCase())){
+        if (str.equals(Periodicita.SETTIMANALE.toString().toLowerCase())) {
             x.saveBiglietto(new Abbonamento(LocalDate.now(), y, Periodicita.SETTIMANALE, z));
-        }else {
+        } else {
             x.saveBiglietto(new Abbonamento(LocalDate.now(), y, Periodicita.MENSILE, z));
         }
     }
 
-    public static void validationSeasonTicket(UtenteDAO x, TesseraDAO y, BigliettoDAO z){
+    public static void validationSeasonTicket(UtenteDAO x, TesseraDAO y, BigliettoDAO z) {
         Scanner scanner = new Scanner(System.in);
-        String str = "";
+        String str;
         System.out.println("Inserire id utente");
         long id = scanner.nextLong();
         Utente utente = x.getById(id);
-        if (utente != null && utente.getNumero_tessera() != null){
-            System.out.println("Controllo tessera");
-            Tessera tessera = y.getById(utente.getNumero_tessera().getId());
-            if (tessera != null){
-                List<Biglietto> abbonamento = z.getItAndCheckExistence(tessera.getId());
-                if (!abbonamento.isEmpty()){
-                    Biglietto ab = abbonamento.get(0);
-                    Periodicita periodo = ((Abbonamento)ab).getPeriodicita();
-                    LocalDate dayA = ab.getData();
-                    LocalDate dayC = LocalDate.now();
-                    if (periodo.equals(Periodicita.SETTIMANALE)){
-                        if (dayA.plusDays(7).equals(dayC) || dayC.isAfter(dayA.plusDays(7)) ){
-                            System.out.println("Abbonamento non valido" + "\n" + "vuoi rinnovarlo");
-                            Scanner risp = new Scanner(System.in);
-                            str = risp.nextLine();
-                            if (str.equals("si")){
-                                ab.setData(LocalDate.now());
-                                z.saveBiglietto(ab);
-                            }
-                        }else {
-                            System.out.println("Abbonamento valido");
-                        }
-                    }else {
-                        if (dayA.plusMonths(1).equals(dayC) || dayC.isAfter(dayA.plusMonths(1))){
-                            System.out.println("Abbonamento non valido" + "\n" + "vuoi rinnovarlo");
-                            Scanner risp = new Scanner(System.in);
-                            str = risp.nextLine();
-                            if (str.equals("si")){
-                                ab.setData(LocalDate.now());
-                                z.saveBiglietto(ab);
-                            }
-                        }
-                    }
-                }else {
-                    System.out.println("Non hai abbonamenti");
-                }
-            }
-        }else {
+        if (utente == null || utente.getNumero_tessera() == null) {
             System.out.println("Non sei tesserato");
+            return;
         }
+        System.out.println("Controllo tessera");
+        Tessera tessera = y.getById(utente.getNumero_tessera().getId());
+        if (tessera == null) {
+            return;
+        }
+        List<Biglietto> abbonamento = z.getItAndCheckExistence(tessera.getId());
+        if (abbonamento.isEmpty()) {
+            System.out.println("Non hai abbonamenti");
+            return;
+        }
+        Biglietto ab = abbonamento.get(0);
+        Periodicita periodo = ((Abbonamento) ab).getPeriodicita();
+        LocalDate dayA = ab.getData();
+        LocalDate dayC = LocalDate.now();
+        if (!periodo.equals(Periodicita.SETTIMANALE)) {
+            if (dayA.plusMonths(1).equals(dayC) || dayC.isAfter(dayA.plusMonths(1))) {
+                System.out.println("Abbonamento non valido" + "\n" + "vuoi rinnovarlo");
+                Scanner risp = new Scanner(System.in);
+                str = risp.nextLine();
+                if (str.equals("si")) {
+                    ab.setData(LocalDate.now());
+                    z.saveBiglietto(ab);
+                }
+
+            }
+        } else {
+            if (!dayA.plusDays(7).equals(dayC) && !dayC.isAfter(dayA.plusDays(7))) {
+                System.out.println("Abbonamento valido");
+                return;
+            }
+            System.out.println("Abbonamento non valido" + "\n" + "vuoi rinnovarlo");
+            Scanner risp = new Scanner(System.in);
+            str = risp.nextLine();
+            if (str.equals("sì")) {
+                ab.setData(LocalDate.now());
+                z.saveBiglietto(ab);
+            }
+
+        }
+
+
     }
 
 

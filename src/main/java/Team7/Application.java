@@ -81,10 +81,7 @@ public class Application {
 
         //SERVIZI DELL'APPLICAZIONE
 
-        /*Controllo biglietti emessi da un distrubutore o da un rivenditore:
-        System.out.println("Inserisci L' ID del distributore o del rivenditore: ");
-        Emissione_Biglietti emissione1 = emissioneDAO.getById(scanner.nextInt());
-        System.out.println(bigliettoDAO.getBigliettiPerPuntoDiEmissione(emissione1).size());*/
+
 
         System.out.println("Seleziona 1 per andare dal rivenditore o 2 per andare dal distributore");
         int scelta = scanner.nextInt();
@@ -92,13 +89,27 @@ public class Application {
         switch (scelta){
             case 1:
                 createTicketRivenditore(bigliettoDAO,emissioneDAO,tesseraDAO,utenteDAO);
+                scanner.close();
                 break;
             case 2:
                 createTicket(bigliettoDAO,emissioneDAO);
+                scanner.close();
                 break;
             default:
                 System.out.println("Numero errato!");
+                scanner.close();
+                break;
         }
+
+
+        Scanner scanner1 = new Scanner(System.in);
+        //Controllo biglietti emessi da un distrubutore o da un rivenditore:
+        System.out.println("Inserisci L' ID del distributore o del rivenditore: ");
+        int scanner2= scanner1.nextInt();
+        Emissione_Biglietti emissione1 = emissioneDAO.getById(scanner2);
+        System.out.println(bigliettoDAO.getBigliettiPerPuntoDiEmissione(emissione1).size());
+
+
 
 
 

@@ -67,7 +67,7 @@ public class Application {
        // generateEmitter(emissioneDAO);
 
         //Creazione Biglietti
-       // createTicketRivenditore(bigliettoDAO,emissioneDAO,tesseraDAO,utenteDAO);
+        //createTicketRivenditore(bigliettoDAO,emissioneDAO,tesseraDAO,utenteDAO);
 
         //Creazione Tratte:
         // generateTrattaDb(trattaDao);
@@ -81,10 +81,33 @@ public class Application {
 
         //SERVIZI DELL'APPLICAZIONE
 
-        //Controllo biglietti emessi da un distrubutore o da un rivenditore:
+        /*Controllo biglietti emessi da un distrubutore o da un rivenditore:
         System.out.println("Inserisci L' ID del distributore o del rivenditore: ");
         Emissione_Biglietti emissione1 = emissioneDAO.getById(scanner.nextInt());
-        System.out.println(bigliettoDAO.getBigliettiPerPuntoDiEmissione(emissione1).size());
+        System.out.println(bigliettoDAO.getBigliettiPerPuntoDiEmissione(emissione1).size());*/
+
+        System.out.println("Seleziona 1 per andare dal rivenditore o 2 per andare dal distributore");
+        int scelta = scanner.nextInt();
+
+        switch (scelta){
+            case 1:
+                createTicketRivenditore(bigliettoDAO,emissioneDAO,tesseraDAO,utenteDAO);
+                break;
+            case 2:
+                createTicket(bigliettoDAO,emissioneDAO);
+                break;
+            default:
+                System.out.println("Numero errato!");
+        }
+
+
+
+
+
+
+
+
+
 
 
 

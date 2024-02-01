@@ -52,6 +52,8 @@ public class Application {
         BigliettoDAO bigliettoDAO = new BigliettoDAO(em);
         TappaDAO tappaDAO = new TappaDAO(em);
 
+        Scanner scanner = new Scanner(System.in);
+
 
 
         //CREAZIONE ELEMENTI RICHIESTI GENERATI AUTOMATICAMENTE!!!
@@ -80,8 +82,9 @@ public class Application {
         //SERVIZI DELL'APPLICAZIONE
 
         //Controllo biglietti emessi da un distrubutore o da un rivenditore:
-        //Emissione_Biglietti emissione1 = emissioneDAO.getById(122);
-        //System.out.println(bigliettoDAO.getBigliettiPerPuntoDiEmissione(emissione1));
+        System.out.println("Inserisci L' ID del distributore o del rivenditore: ");
+        Emissione_Biglietti emissione1 = emissioneDAO.getById(scanner.nextInt());
+        System.out.println(bigliettoDAO.getBigliettiPerPuntoDiEmissione(emissione1).size());
 
 
 

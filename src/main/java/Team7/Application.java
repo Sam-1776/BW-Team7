@@ -55,6 +55,19 @@ public class Application {
         Scanner scanner = new Scanner(System.in);
 
 
+        /*
+        Possiamo dividere in piccole funzioni contenenti switch
+        Lo switch principale può essere posto nel main dove ricade una scelta per una porzione dle progetto
+        ESEMPIO:
+        caso 1 = creazione db
+        caso 2 = tutte le funzioni inerenti i biglietti (Prima parte del progetto)
+        caso 3 = tutte le funzioni del mezzo (Seconda parte del progetto)
+        caso 4 = tutte le funzioni delle tratte (Terza parte del progetto)
+
+        Tutti i casi hanno uno switch per poter scegliere poi la funzione da testare
+        Per poter poi pulire ulteriormente il main possiamo snellire le funzioni lunghe e creare
+        una classe che contenga tutti i metodi da utilizzare e lasciare nel main poi solo le funzioni con gli switch
+         */
 
         //CREAZIONE ELEMENTI RICHIESTI GENERATI AUTOMATICAMENTE!!!
 
@@ -83,7 +96,7 @@ public class Application {
 
 
 
-        System.out.println("Seleziona 1 per andare dal rivenditore o 2 per andare dal distributore");
+        System.out.println("Seleziona 1 per andare dal rivenditore, 2 per andare dal distributore, 3 per il controllo dei biglietti erogati, 4 controllo validità abbonamento ,0 per uscire");
         int scelta = scanner.nextInt();
 
         switch (scelta){
@@ -95,19 +108,21 @@ public class Application {
                 createTicket(bigliettoDAO,emissioneDAO);
                 scanner.close();
                 break;
+            case 3:
+                //Controllo biglietti emessi da un distrubutore o da un rivenditore:
+                System.out.println("Inserisci L' ID del distributore o del rivenditore: ");
+                int scanner2= scanner.nextInt();
+                Emissione_Biglietti emissione1 = emissioneDAO.getById(scanner2);
+                System.out.println(bigliettoDAO.getBigliettiPerPuntoDiEmissione(emissione1).size());
+                scanner.close();
+                break;
+            case 4:
+                validationSeasonTicket(utenteDAO, tesseraDAO, bigliettoDAO);
             default:
-                System.out.println("Numero errato!");
+                System.out.println("Non hai selezionato nessun ");
                 scanner.close();
                 break;
         }
-
-
-        Scanner scanner1 = new Scanner(System.in);
-        //Controllo biglietti emessi da un distrubutore o da un rivenditore:
-        System.out.println("Inserisci L' ID del distributore o del rivenditore: ");
-        int scanner2= scanner1.nextInt();
-        Emissione_Biglietti emissione1 = emissioneDAO.getById(scanner2);
-        System.out.println(bigliettoDAO.getBigliettiPerPuntoDiEmissione(emissione1).size());
 
 
 
@@ -184,7 +199,7 @@ public class Application {
 
     public static LocalDate generateData() {
 
-        int year = rdm.nextInt(2022, 2023);
+        int year = rdm.nextInt(2023, 2024);
         int month = rdm.nextInt(12) + 1;
         int maxDay = LocalDate.of(year, month, 1).lengthOfMonth();
         int day = rdm.nextInt(maxDay) + 1;
@@ -267,12 +282,7 @@ public class Application {
                             x.saveBiglietto(new Biglietto(LocalDate.now(), e));
                         }
                     }else {
-                        List<Biglietto> bList = x.getItAndCheckExistence(input);
-                        if (bList.isEmpty()){
-                            makeSeasonTicket(x,e,t);
-                        }else {
-                            System.out.println("Hai già un abbonamento");
-                        }
+
                     }
                 }
             }else {
@@ -292,11 +302,7 @@ public class Application {
     }
 
     public static boolean checkExpiration(Tessera y){
-        int yearT = y.getData_scadenza().getYear();
-        int monthT = y.getData_scadenza().getMonthValue();
-        int year = LocalDate.now().getYear();
-        int month = LocalDate.now().getMonthValue();
-        if (yearT == year && monthT >= month){
+        if (LocalDate.now().isAfter(y.getData_scadenza())){
             return true;
         }
         return false;

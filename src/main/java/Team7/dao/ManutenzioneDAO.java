@@ -5,12 +5,11 @@ import Team7.superclassi.Mezzo;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
-import java.util.List;
 
 public class ManutenzioneDAO {
-    EntityManager em;
+    private EntityManager em;
 
-    ManutenzioneDAO(EntityManager em){
+    public ManutenzioneDAO(EntityManager em){
         this.em = em;
     }
 
@@ -25,9 +24,12 @@ public class ManutenzioneDAO {
     }
 
 
-    public List<Manutenzione> getInzioeFineManutenzione(Mezzo mezzo){
-        TypedQuery<Manutenzione> query = em.createQuery("SELECT m.datainizio AND m.datafine FROM manutenzione m JOIN m.mezzo mezzo WHERE mezzo=:mezzo ",Manutenzione.class);
+    public Manutenzione getInzioeFineManutenzione(Mezzo mezzo){
+        TypedQuery<Manutenzione> query = em.createQuery("SELECT m FROM Manutenzione m WHERE m.mezzo =:mezzo ",Manutenzione.class);
         query.setParameter("mezzo", mezzo);
-        return query.getResultList();
+        if (query != null) {
+            return query.getSingleResult();
+        }
+        return null;
     }
 }

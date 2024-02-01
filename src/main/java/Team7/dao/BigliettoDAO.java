@@ -56,7 +56,6 @@ public class BigliettoDAO {
                 LocalDateTime timbro = LocalDateTime.now();
                 biglietto.setTimbro(timbro);
                 biglietto.setMezzo(mezzo);
-
                 em.getTransaction().begin();
                 em.merge(biglietto);
                 em.getTransaction().commit();

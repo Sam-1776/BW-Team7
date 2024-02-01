@@ -26,9 +26,11 @@ public class Tappa {
     public Tappa() {
     }
 
-    public Tappa(String nome, Tratta tratta) {
+    public Tappa(String nome, Tratta tratta, LocalDateTime arrivo, LocalDateTime arrivoProssimaTappa) {
         this.nome = nome;
         this.tratta = tratta;
+        this.arrivo = arrivo;
+        this.arrivoProssimaTappa = arrivoProssimaTappa;
     }
     public Tappa(String nome, LocalDateTime arrivo, LocalDateTime arrivoProssimaTappa) {
         this.nome = nome;

@@ -12,6 +12,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
@@ -94,59 +95,89 @@ public class Application {
 
         //SERVIZI DELL'APPLICAZIONE
 
-
-
-        System.out.println("Seleziona 1 per andare dal rivenditore, 2 per andare dal distributore, 3 per il controllo dei biglietti erogati, 4 controllo validità abbonamento ,0 per uscire");
+        System.out.println("Seleziona: \n" + "1- Generazione DB \n" + "2- Operazioni Biglietti \n" + "3- Operazione sui Mezzi \n" + "4- Operazioni sulle Tratte \n" + "0-ESCI");
         int scelta = scanner.nextInt();
+        boolean ciclo = true;
 
+            switch (scelta){
+                case 1:
+                    // genera automaticamente utenti casuali
+                    generateUserDb(utenteDAO);
+                    // genera automaticamente card per degli utenti presi casualmente
+                    generateUserCard(tesseraDAO,utenteDAO);
+                    // genera automaticamente distributori e punti vendita per i biglietti
+                    generateEmitter(emissioneDAO);
+                    // genera automaticamente tratte per i mezzi
+                    generateTrattaDb(trattaDao);
+                    //genera automaticamente tappe delle tratte
+                    generateTappaTratta(trattaDao);
+                    // genera automaticamente dei mezzi
+                    generateMezzoTratta(mezzoDAO,trattaDao);
+                    break;
+                case 2:
+                    // permette di testare tutte le funzioni dei biglietti abbonamenti e tessere
+                    functionOnTicket(utenteDAO, bigliettoDAO, tesseraDAO, emissioneDAO);
+                    break;
+                case 3:
+                    // permette di testare tutte le funzioni dei mezzi
+                    functionOnTransport(mezzoDAO, trattaDao, bigliettoDAO);
+                    break;
+            }
+
+
+
+    }
+
+    public static void functionOnTicket(UtenteDAO x, BigliettoDAO y, TesseraDAO z, EmissioneDAO e){
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Seleziona: \n" + "1- per andare dal rivenditore \n" +"2- per andare dal distributore \n" + "3- per il controllo dei biglietti erogati \n" + "4- controllo validità abbonamento \n" + "0 per uscire");
+        int scelta = scanner.nextInt();
         switch (scelta){
             case 1:
-                createTicketRivenditore(bigliettoDAO,emissioneDAO,tesseraDAO,utenteDAO);
+                createTicketRivenditore(y,e,z,x);
                 scanner.close();
                 break;
             case 2:
-                createTicket(bigliettoDAO,emissioneDAO);
+                createTicket(y,e);
                 scanner.close();
                 break;
             case 3:
                 //Controllo biglietti emessi da un distrubutore o da un rivenditore:
                 System.out.println("Inserisci L' ID del distributore o del rivenditore: ");
                 int scanner2= scanner.nextInt();
-                Emissione_Biglietti emissione1 = emissioneDAO.getById(scanner2);
-                System.out.println(bigliettoDAO.getBigliettiPerPuntoDiEmissione(emissione1).size());
+                Emissione_Biglietti emissione1 = e.getById(scanner2);
+                System.out.println(y.getBigliettiPerPuntoDiEmissione(emissione1).size());
                 scanner.close();
                 break;
             case 4:
-                validationSeasonTicket(utenteDAO, tesseraDAO, bigliettoDAO);
+                validationSeasonTicket(x, z, y);
             default:
                 System.out.println("Non hai selezionato nessun ");
                 scanner.close();
                 break;
         }
+    }
 
+    public static void functionOnTransport(MezzoDAO x, TrattaDAO y, BigliettoDAO z){
+        Scanner scanner = new Scanner(System.in);
+        long id = 0;
+        System.out.println("Seleziona: \n" + "1- Metti in manutenzione un Mezzo \n" + " 2- Metti in servizio un Mezzo \n" + "3- Controlla il periodo di manutenzione e servizio di un Mezzo \n");
+        int scelta = scanner.nextInt();
+        switch (scelta){
+            case 1:
+                System.out.println("Inserire id mezzo");
+                id = scanner.nextLong();
+                x.iniziaManutenzione(LocalDate.now(),x.getById(id));
+                break;
+            case 2:
+                System.out.println("Inserire id mezzo");
+                id = scanner.nextLong();
+                x.fineManutenzione(LocalDate.now(),x.getById(id));
+                break;
+            case 3:
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                break;
+        }
     }
 
     public static void generateUserDb(UtenteDAO x) {
@@ -157,6 +188,19 @@ public class Application {
     public static void generateTrattaDb(TrattaDAO x) {
         for (int i = 0; i < 5; i++) {
             x.saveSection(generateTratta.get());
+        }
+    }
+
+    public static void generateTappaTratta(TrattaDAO x){
+        for (int i = 0; i < 50; i++) {
+            long n = rdm.nextLong(171, 176);
+            Tratta t = x.getById(n);
+            if (t != null) {
+                LocalDateTime arrivo = LocalDateTime.of(LocalDate.now(), LocalTime.of(rdm.nextInt(5,23), 00));
+                t.getTappe().add(new Tappa(faker.address().streetAddress(), t, arrivo, arrivo.plusMinutes(rdm.nextInt(5))));
+            }else {
+                i--;
+            }
         }
     }
     public static void generateMezzoTratta(MezzoDAO x, TrattaDAO y) {
@@ -282,7 +326,8 @@ public class Application {
                             x.saveBiglietto(new Biglietto(LocalDate.now(), e));
                         }
                     }else {
-
+                        System.out.println("Tessera valida");
+                        makeSeasonTicket(x,e,t);
                     }
                 }
             }else {

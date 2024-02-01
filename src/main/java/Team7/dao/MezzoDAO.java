@@ -1,9 +1,6 @@
 package Team7.dao;
 
-import Team7.classi.Fermata;
-import Team7.classi.Manutenzione;
-import Team7.classi.Servizio;
-import Team7.classi.Tappa;
+import Team7.classi.*;
 import Team7.superclassi.Mezzo;
 import org.hibernate.Session;
 
@@ -35,6 +32,16 @@ public class MezzoDAO {
             System.out.println("Elemento Salvato con successo");
         } catch (Exception e){
             System.out.println(e.getMessage());
+        }
+    }
+
+    public Mezzo getById (long id){
+        Mezzo found = em.find(Mezzo.class, id);
+        if (found != null) {
+            return found;
+        }else {
+            System.out.println("Utente non trovato");
+            return null;
         }
     }
 

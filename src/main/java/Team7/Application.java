@@ -135,9 +135,13 @@ public class Application {
             case 3:
                 System.out.println("Inserire id mezzo");
                 id = scanner.nextLong();
-                Manutenzione c = m.getInzioeFineManutenzione(x.getById(id));
-                long daysBetween = ChronoUnit.DAYS.between(c.getDataFine(), c.getDataInizio());
-                System.out.println(daysBetween);
+                try{
+                    Manutenzione c = m.getInzioeFineManutenzione(x.getById(id));
+                    long daysBetween = ChronoUnit.DAYS.between(c.getDataFine(), c.getDataInizio());
+                    System.out.println(daysBetween);
+                }catch (Exception e){
+                    System.out.println("Il mezzo non è mai stato in manutenzione");
+                }
                 break;
             case 4:
                 System.out.println("Inserire id mezzo");

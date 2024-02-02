@@ -25,11 +25,11 @@ public class ManutenzioneDAO {
 
 
     public Manutenzione getInzioeFineManutenzione(Mezzo mezzo){
-        TypedQuery<Manutenzione> query = em.createQuery("SELECT m FROM Manutenzione m WHERE m.mezzo =:mezzo ",Manutenzione.class);
-        query.setParameter("mezzo", mezzo);
-        if (query != null) {
-            return query.getSingleResult();
-        }
+            TypedQuery<Manutenzione> query = em.createQuery("SELECT m FROM Manutenzione m WHERE m.mezzo =:mezzo ",Manutenzione.class);
+            query.setParameter("mezzo", mezzo);
+            if (query != null) {
+                return query.getSingleResult();
+            }
         return null;
     }
 }

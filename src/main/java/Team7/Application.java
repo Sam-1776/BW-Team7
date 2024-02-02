@@ -58,43 +58,6 @@ public class Application {
         Scanner scanner = new Scanner(System.in);
 
 
-        /*
-        Possiamo dividere in piccole funzioni contenenti switch
-        Lo switch principale può essere posto nel main dove ricade una scelta per una porzione dle progetto
-        ESEMPIO:
-        caso 1 = creazione db
-        caso 2 = tutte le funzioni inerenti i biglietti (Prima parte del progetto)
-        caso 3 = tutte le funzioni del mezzo (Seconda parte del progetto)
-        caso 4 = tutte le funzioni delle tratte (Terza parte del progetto)
-
-        Tutti i casi hanno uno switch per poter scegliere poi la funzione da testare
-        Per poter poi pulire ulteriormente il main possiamo snellire le funzioni lunghe e creare
-        una classe che contenga tutti i metodi da utilizzare e lasciare nel main poi solo le funzioni con gli switch
-         */
-
-        //CREAZIONE ELEMENTI RICHIESTI GENERATI AUTOMATICAMENTE!!!
-
-        //Creazione Utenti:
-       // generateUserDb(utenteDAO);
-        //Creazione Tessere:
-       // generateUserCard(tesseraDAO,utenteDAO);
-
-        //Creazione Distributore e Rivenditore:
-       // generateEmitter(emissioneDAO);
-
-        //Creazione Biglietti
-        //createTicketRivenditore(bigliettoDAO,emissioneDAO,tesseraDAO,utenteDAO);
-
-        //Creazione Tratte:
-        // generateTrattaDb(trattaDao);
-
-        //Creazione Mezzi:
-       // generateMezzoTratta(mezzoDAO,trattaDao);
-
-        //Controllo numeri biglietti erogati in un giorno specifico
-        //System.out.println(bigliettoDAO.getBigliettiTotali(LocalDate.now()));
-
-
         //SERVIZI DELL'APPLICAZIONE
 
         System.out.println("Seleziona: \n" + "1- Generazione DB \n" + "2- Operazioni Biglietti \n" + "3- Operazione sui Mezzi \n" + "4- Operazioni sulle Tratte \n" + "0-ESCI");
@@ -139,19 +102,21 @@ public class Application {
 
     public static void functionOnTicket(UtenteDAO x, BigliettoDAO y, TesseraDAO z, EmissioneDAO e){
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Seleziona: \n" + "1- per andare dal rivenditore \n" +"2- per andare dal distributore \n" + "3- per il controllo dei biglietti erogati \n" + "4- controllo validità abbonamento \n" + "0- ESCI");
+        System.out.println("Seleziona: \n" + "1- per andare dal rivenditore \n" +"2- per andare dal distributore \n" + "3- controllo dei biglietti erogati \n" + "4- controllo di tutti i biglietti/abbonamenti totali " + "5- controllo validità abbonamento \n" + "0- ESCI");
         int scelta = scanner.nextInt();
         switch (scelta){
             case 1:
+                // permette di creare un biglietto o abbonamento da un rivenditore
                 createTicketRivenditore(y,e,z,x);
                 scanner.close();
                 break;
             case 2:
+                // permette di creare un biglietto da distributore
                 createTicket(y,e);
                 scanner.close();
                 break;
             case 3:
-                //Controllo biglietti emessi da un distrubutore o da un rivenditore:
+                //Controllo biglietti emessi da un distributore o da un rivenditore:
                 System.out.println("Inserisci L' ID del distributore o del rivenditore: ");
                 int scanner2= scanner.nextInt();
                 Emissione_Biglietti emissione1 = e.getById(scanner2);
@@ -159,6 +124,15 @@ public class Application {
                 scanner.close();
                 break;
             case 4:
+                // controlla in numero dei biglietti e abbonamenti totali di un determinato giorno
+                Scanner input = new Scanner(System.in);
+                System.out.println("Inserire data da controllare");
+                String str = input.nextLine();
+                LocalDate day = LocalDate.parse(str);
+                y.getBigliettiTotali(day).forEach(System.out::println);
+                break;
+            case 5:
+                // serve a controllare la validità di un abbonamento
                 validationSeasonTicket(x, z, y);
             default:
                 System.out.println("Arrivederci");

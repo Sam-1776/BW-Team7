@@ -7,11 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
 public class ManutenzioneDAO {
-<<<<<<< HEAD
   private EntityManager em;
-=======
-    private EntityManager em;
->>>>>>> ad7d5bfc47b353d38113b9346d0cc44d5e100c0f
 
     public ManutenzioneDAO(EntityManager em){
         this.em = em;

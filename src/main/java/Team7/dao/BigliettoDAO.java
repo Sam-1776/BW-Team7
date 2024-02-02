@@ -94,11 +94,6 @@ public class BigliettoDAO {
     }
 
 
-
-
-
-
-
     public List<Biglietto> getItAndCheckExistence(long id) {
         TypedQuery<Biglietto> getIt = em.createQuery("SELECT b FROM Biglietto b WHERE b.tessera.id =:id", Biglietto.class);
         getIt.setParameter("id", id);

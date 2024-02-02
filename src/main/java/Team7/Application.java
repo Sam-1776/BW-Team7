@@ -13,6 +13,7 @@ import javax.persistence.Persistence;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
@@ -51,6 +52,7 @@ public class Application {
         TrattaDAO trattaDao = new TrattaDAO(em);
         EmissioneDAO emissioneDAO = new EmissioneDAO(em);
         BigliettoDAO bigliettoDAO = new BigliettoDAO(em);
+        ManutenzioneDAO manutenzioneDAO = new ManutenzioneDAO(em);
         TappaDAO tappaDAO = new TappaDAO(em);
 
         Scanner scanner = new Scanner(System.in);
@@ -120,7 +122,7 @@ public class Application {
                     break;
                 case 3:
                     // permette di testare tutte le funzioni dei mezzi
-                    functionOnTransport(mezzoDAO, trattaDao, bigliettoDAO);
+                    functionOnTransport(mezzoDAO, trattaDao, bigliettoDAO, manutenzioneDAO);
                     break;
             }
 
@@ -152,16 +154,16 @@ public class Application {
             case 4:
                 validationSeasonTicket(x, z, y);
             default:
-                System.out.println("Non hai selezionato nessun ");
+                System.out.println("Arrivederci");
                 scanner.close();
                 break;
         }
     }
 
-    public static void functionOnTransport(MezzoDAO x, TrattaDAO y, BigliettoDAO z){
+    public static void functionOnTransport(MezzoDAO x, TrattaDAO y, BigliettoDAO z, ManutenzioneDAO m){
         Scanner scanner = new Scanner(System.in);
         long id = 0;
-        System.out.println("Seleziona: \n" + "1- Metti in manutenzione un Mezzo \n" + " 2- Metti in servizio un Mezzo \n" + "3- Controlla il periodo di manutenzione e servizio di un Mezzo \n");
+        System.out.println("Seleziona: \n" + "1- Metti in manutenzione un Mezzo \n" + "2- Metti in servizio un Mezzo \n" + "3- Controlla il periodo di manutenzione e servizio di un Mezzo \n" + "4- Timbro biglietto \n" + "5- Controllo biglietti timbrati su un mezzo \n" + "6- Controllo biglietti di un dato giorno");
         int scelta = scanner.nextInt();
         switch (scelta){
             case 1:
@@ -175,7 +177,34 @@ public class Application {
                 x.fineManutenzione(LocalDate.now(),x.getById(id));
                 break;
             case 3:
-
+                System.out.println("Inserire id mezzo");
+                id = scanner.nextLong();
+                Manutenzione c = m.getInzioeFineManutenzione(x.getById(id));
+                long daysBetween = ChronoUnit.DAYS.between(c.getDataFine(), c.getDataInizio());
+                System.out.println(daysBetween);
+                break;
+            case 4:
+                System.out.println("Inserire id mezzo");
+                id = scanner.nextLong();
+                System.out.println("Inserire id biglietto");
+                long idb = scanner.nextLong();
+                z.timbraBiglietto(z.getById(idb), x.getById(id));
+                break;
+            case 5:
+                System.out.println("Inserire id mezzo");
+                id = scanner.nextLong();
+                z.getBigliettiMezzo(x.getById(id)).forEach(System.out::println);
+                break;
+            case 6:
+                Scanner input = new Scanner(System.in);
+                System.out.println("Inserire data da controllare");
+                String str = input.nextLine();
+                LocalDate day = LocalDate.parse(str);
+                z.getBigliettiTimbratiInGiorno(day).forEach(System.out::println);
+                break;
+            default:
+                System.out.println("Arrivederci");
+                scanner.close();
                 break;
         }
     }

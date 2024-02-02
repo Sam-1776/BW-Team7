@@ -27,5 +27,4 @@ public abstract class Emissione_Biglietti {
     @OneToMany(mappedBy = "emissioneBiglietti")
     private List<Abbonamento> abbonamentiEmessi;
 
-
 }

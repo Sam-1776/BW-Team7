@@ -28,4 +28,11 @@ public class Distributore extends Emissione_Biglietti {
     public void setStato(Stato stato) {
         this.stato = stato;
     }
+
+    @Override
+    public String toString() {
+        return "Distributore{" +
+                "stato=" + stato +
+                '}';
+    }
 }

@@ -20,4 +20,12 @@ public class Rivenditore extends Emissione_Biglietti {
         this.nome = nome;
         Luogo = luogo;
     }
+
+    @Override
+    public String toString() {
+        return "Rivenditore{" +
+                "nome='" + nome + '\'' +
+                ", Luogo='" + Luogo + '\'' +
+                '}';
+    }
 }

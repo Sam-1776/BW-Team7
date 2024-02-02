@@ -58,6 +58,7 @@ public class BigliettoDAO {
                 biglietto.setMezzo(mezzo);
                 em.getTransaction().begin();
                 em.merge(biglietto);
+                System.out.println("Biglietto timbrato");
                 em.getTransaction().commit();
             } else {
                 System.out.println("Biglietto già timbrato!");

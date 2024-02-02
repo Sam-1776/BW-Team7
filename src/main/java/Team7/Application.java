@@ -75,7 +75,7 @@ public class Application {
 
     public static void functionOnTicket(UtenteDAO x, BigliettoDAO y, TesseraDAO z, EmissioneDAO e){
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Seleziona: \n" + "1- per andare dal rivenditore \n" +"2- per andare dal distributore \n" + "3- controllo dei biglietti erogati \n" + "4- controllo di tutti i biglietti/abbonamenti totali " + "5- controllo validità abbonamento \n" + "0- ESCI");
+        System.out.println("Seleziona: \n" + "1- per andare dal rivenditore \n" +"2- per andare dal distributore \n" + "3- controllo dei biglietti erogati \n" + "4- controllo di tutti i biglietti/abbonamenti totali \n" + "5- controllo validità abbonamento \n" + "0- ESCI");
         int scelta = scanner.nextInt();
         switch (scelta){
             case 1:

@@ -124,6 +124,13 @@ public class Application {
                     // permette di testare tutte le funzioni dei mezzi
                     functionOnTransport(mezzoDAO, trattaDao, bigliettoDAO, manutenzioneDAO);
                     break;
+                case 4:
+                    // permette di testare le funzioni sulle tappe dei mezzi
+                    functionOnLap(mezzoDAO, tappaDAO);
+                    break;
+                default:
+                    System.out.println("Arrivederci");
+                    break;
             }
 
 
@@ -132,7 +139,7 @@ public class Application {
 
     public static void functionOnTicket(UtenteDAO x, BigliettoDAO y, TesseraDAO z, EmissioneDAO e){
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Seleziona: \n" + "1- per andare dal rivenditore \n" +"2- per andare dal distributore \n" + "3- per il controllo dei biglietti erogati \n" + "4- controllo validità abbonamento \n" + "0 per uscire");
+        System.out.println("Seleziona: \n" + "1- per andare dal rivenditore \n" +"2- per andare dal distributore \n" + "3- per il controllo dei biglietti erogati \n" + "4- controllo validità abbonamento \n" + "0- ESCI");
         int scelta = scanner.nextInt();
         switch (scelta){
             case 1:
@@ -163,7 +170,7 @@ public class Application {
     public static void functionOnTransport(MezzoDAO x, TrattaDAO y, BigliettoDAO z, ManutenzioneDAO m){
         Scanner scanner = new Scanner(System.in);
         long id = 0;
-        System.out.println("Seleziona: \n" + "1- Metti in manutenzione un Mezzo \n" + "2- Metti in servizio un Mezzo \n" + "3- Controlla il periodo di manutenzione e servizio di un Mezzo \n" + "4- Timbro biglietto \n" + "5- Controllo biglietti timbrati su un mezzo \n" + "6- Controllo biglietti di un dato giorno");
+        System.out.println("Seleziona: \n" + "1- Metti in manutenzione un Mezzo \n" + "2- Metti in servizio un Mezzo \n" + "3- Controlla il periodo di manutenzione e servizio di un Mezzo \n" + "4- Timbro biglietto \n" + "5- Controllo biglietti timbrati su un mezzo \n" + "6- Controllo biglietti di un dato giorno \n" + "0- ESCI");
         int scelta = scanner.nextInt();
         switch (scelta){
             case 1:
@@ -174,7 +181,9 @@ public class Application {
             case 2:
                 System.out.println("Inserire id mezzo");
                 id = scanner.nextLong();
-                x.fineManutenzione(LocalDate.now(),x.getById(id));
+                System.out.println("Inserire id tratta");
+                long idT = scanner.nextLong();
+                x.fineManutenzione(LocalDate.now(),x.getById(id),y.getById(idT));
                 break;
             case 3:
                 System.out.println("Inserire id mezzo");
@@ -205,6 +214,33 @@ public class Application {
             default:
                 System.out.println("Arrivederci");
                 scanner.close();
+                break;
+        }
+    }
+
+    public static void functionOnLap(MezzoDAO x, TappaDAO y){
+        Scanner scanner = new Scanner(System.in);
+        long id = 0;
+        long idT = 0;
+        System.out.println("Seleziona \n" + "1- Mezzo percorre una tappa \n" + "2- Calcolo delle volte che un mezzo percorre una tappa");
+        int scelta = scanner.nextInt();
+        switch (scelta){
+            case 1:
+                System.out.println("Inserisci di mezzo");
+                id = scanner.nextLong();
+                System.out.println("Inserire id tappa");
+                idT = scanner.nextLong();
+                x.percorriTappa(x.getById(id), y.getById(idT));
+                break;
+            case 2:
+                System.out.println("Inserisci di mezzo");
+                id = scanner.nextLong();
+                System.out.println("Inserire id tappa");
+                idT = scanner.nextLong();
+                x.numeroPercorrenzaTappa(x.getById(id), y.getById(idT));
+                break;
+            default:
+                System.out.println("Arrivederci");
                 break;
         }
     }

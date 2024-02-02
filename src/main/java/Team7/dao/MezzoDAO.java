@@ -29,7 +29,7 @@ public class MezzoDAO {
             transaction.begin();
             em.persist(mezzo);
             transaction.commit();
-            System.out.println("Elemento Salvato con successo");
+            System.out.println("Mezzo Salvato con successo");
         } catch (Exception e){
             System.out.println(e.getMessage());
         }
@@ -40,7 +40,7 @@ public class MezzoDAO {
         if (found != null) {
             return found;
         }else {
-            System.out.println("Utente non trovato");
+            System.out.println("Mezzo non trovato");
             return null;
         }
     }
@@ -51,6 +51,7 @@ public class MezzoDAO {
             return;
         }
         mezzo.setServizio(Servizio.MANUTENZIONE);
+        mezzo.setTratta(null);
 
         Manutenzione manutenzione = new Manutenzione();
         manutenzione.setDataInizio(dataInizio);
@@ -62,12 +63,13 @@ public class MezzoDAO {
         em.getTransaction().commit();
         System.out.printf("la manutenzione del mezzo %d è iniziata\n", mezzo.getId());
     }
-    public void fineManutenzione(LocalDate dataFine, Mezzo mezzo) {
+    public void fineManutenzione(LocalDate dataFine, Mezzo mezzo, Tratta tratta) {
         if (mezzo.getServizio() == Servizio.SERVIZIO) {
             System.out.printf("il mezzo %d è in servizio\n", mezzo.getId());
             return;
         }
         mezzo.setServizio(Servizio.SERVIZIO);
+        mezzo.setTratta(tratta);
         //carico la named query dalla classe manutenzione
         Query query = em.unwrap(Session.class).getNamedQuery("Manutenzione_attuale");
 
